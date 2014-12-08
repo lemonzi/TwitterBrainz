@@ -5,7 +5,8 @@ var express = require('express'),
     Twit = require('twit'),
     io = require('socket.io').listen(server),
     NB = require('nodebrainz'),
-    request = require('request-json');
+    request = require('request-json'),
+    secrets = require('./secrets.json');
 
 // server.listen(8080);
 
@@ -14,21 +15,11 @@ var express = require('express'),
 // Keyboards to listen for
 var watchList = ['nashville'];
 
-var T = new Twit({
-consumer_key:           'your key here',
-  consumer_secret:      'your secret here',
-  access_token:         'your token here',
-  access_token_secret:  'your token here'
-});
-
 io.sockets.on('connection', function (socket) {
-  var stream = T.stream('statuses/filter', { track: watchList });
-  // When a Tweet is recieved:
-  stream.on('tweet', function (tweet) {
-    turl = linkify(tweet.text);
     // Send the Tweet to the browser
-    io.sockets.emit('stream',turl, tweet.user.screen_name, tweet.user.profile_image_url);
-  });
+    getTweets({track: watchList}, function(err, resp) {
+      io.sockets.emit('stream', linkify(resp.text), resp.username, resp.avatar);
+    });
 });
 
 */
@@ -41,6 +32,49 @@ function linkify(text) {
   else
     turl = text;
   return turl;
+}
+
+// THIS IS FOR TWITTER
+
+var T = new Twit(secrets.twitter);
+
+function getTweets(query, count, callback) {
+  T.get('search/tweets', {
+    q: query,
+    count: count,
+    location: [-180, -90, 180, 90] ///// THIS IS WROOOOOOOOONG
+  }, function(err, data, response) {
+    if (err) callback(true, err);
+    else data.statuses.forEach(function(tweet) {
+      processTweet(tweet, callback);
+    });
+  });
+}
+
+function getTweetsRealtime(query, callback) {
+  var stream = T.stream('statuses/filter', {track:query});
+  // When a Tweet is recieved:
+  stream.on('tweet', function(tweet) {
+    processTweet(tweet, callback);
+  });
+  stream.on('error', function(data) {
+    callback(true, 'Twitter API error');
+  });
+}
+
+function processTweet(tweet, callback) {
+  var location;
+  if (!tweet.coordinates) {
+    // do something with the user
+  } else {
+    location = tweet.coordinates.coordinates;
+  }
+  callback(false, {
+    text: tweet.text,
+    username: tweet.user.screen_name,
+    avatar: tweet.user.profile_image_url,
+    location: location
+  });
 }
 
 // THIS IS FOR MUSICBRAINZ
@@ -75,8 +109,8 @@ function musicBrainz(query, mbCallback) {
 
 // THIS IS FOR ACOUSTICBRAINZ
 
+var acousticBrainzClient = request.newClient('http://acousticbrainz.org/');
 function acousticBrainz(id, callback) {
-  var acousticBrainzClient = request.newClient('http://acousticbrainz.org/');
   acousticBrainzClient.get(id+'/low-level', function(err, res, body) {
     if (res.statusCode == 404) {
       callback(true, 'No acoustic features found');
@@ -88,13 +122,30 @@ function acousticBrainz(id, callback) {
   });
 }
 
-// TEST
+// TEST TWITTER
+
+var cbTwtr = function(err, resp) {
+  if (err) console.log('error:', resp);
+  else if (resp.location) console.log(resp.text);
+};
+
+var keywords = [
+  'itunes apple com album',
+  'openspotify com',
+  '#Now Playing',
+  '#nowplaying'
+];
+
+getTweets(keywords.join(' OR '), 1000, cbTwtr);
+//getTweetsRealtime(keywords, cbTwtr);
+
+// TEST ACOUSTICBRAINZ
 
 var cb = function(err, resp) {
   if (err) console.log('error:', resp);
   else console.log(resp);
 };
 
-musicBrainz({recording:'Beat it', artist:'Michael Jackson'}, cb);
-musicBrainz({recording:'Smooth Criminal', artist:'Michael Jackson'}, cb);
-musicBrainz({recording:'Heal the World', artist:'Michael Jackson'}, cb);
+// musicBrainz({recording:'Beat it', artist:'Michael Jackson'}, cb);
+// musicBrainz({recording:'Smooth Criminal', artist:'Michael Jackson'}, cb);
+// musicBrainz({recording:'Heal the World', artist:'Michael Jackson'}, cb);
