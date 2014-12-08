@@ -95,6 +95,6 @@ var cb = function(err, resp) {
   else console.log(resp);
 };
 
-musicBrainz({recording:'Thriller', artist:'Michael Jackson'}, cb);
+musicBrainz({recording:'Beat it', artist:'Michael Jackson'}, cb);
 musicBrainz({recording:'Smooth Criminal', artist:'Michael Jackson'}, cb);
 musicBrainz({recording:'Heal the World', artist:'Michael Jackson'}, cb);
