@@ -126,18 +126,34 @@ function acousticBrainz(id, callback) {
 
 var cbTwtr = function(err, resp) {
   if (err) console.log('error:', resp);
-  else if (resp.location) console.log(resp.text);
+  else /*if (resp.location)*/ console.log(resp.text);
 };
 
 var keywords = [
   'itunes apple com album',
   'openspotify com',
   '#Now Playing',
-  '#nowplaying'
+  '#nowplaying',
+  '#SoundCloud',
+  '#GooglePlayMusic',
+  '#np',
+  '@doubleTwist',
+  '#Spotify',
+  '@YouTube',
+  '#PowerAMP',
+  '#EverythingThatRocks',
+  'MakeAVoice Radio: Now Playing',
+  'New Music Alert',
+  '#Soulairium',
+  'Check out the song',
+  'PlayerPro@Android',
+  'Deezer',
+  'SoundHound',
+  'Posted a new song:'
 ];
 
-getTweets(keywords.join(' OR '), 1000, cbTwtr);
-//getTweetsRealtime(keywords, cbTwtr);
+//getTweets(keywords.join(' OR '), 1000, cbTwtr);
+getTweetsRealtime(keywords, cbTwtr);
 
 // TEST ACOUSTICBRAINZ
 
@@ -146,6 +162,13 @@ var cb = function(err, resp) {
   else console.log(resp);
 };
 
-// musicBrainz({recording:'Beat it', artist:'Michael Jackson'}, cb);
-// musicBrainz({recording:'Smooth Criminal', artist:'Michael Jackson'}, cb);
-// musicBrainz({recording:'Heal the World', artist:'Michael Jackson'}, cb);
+//musicBrainz({recording:'Beat it', artist:'Michael Jackson'}, cb);
+//musicBrainz({recording:'Smooth Criminal', artist:'Michael Jackson'}, cb);
+//musicBrainz({recording:'Heal the World', artist:'Michael Jackson'}, cb);
+//musicBrainz({recording:'Eine Kleine Nachtmusic', artist:'Mozart'}, cb);
+//musicBrainz({recording:'Invisible kid', artist:'Metallica'}, cb);
+//musicBrainz({recording:'Heal the World', artist:'Michael Jackson'}, cb);
+//musicBrainz({recording:'All of me', artist:'Jon Schmidt'}, cb);
+musicBrainz({artist:'Michael Jackson',limit:100},cb);
+//musicBrainz({recording:'Shake it off', artist:'Taylor Swift'},cb);
+//musicBrainz({recording:'Hurt', artist:'Johnny Cash'},cb);
