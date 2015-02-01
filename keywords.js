@@ -6,11 +6,10 @@ module.exports = [
       /([\wàèìòùáéíóúäëïöü'!, ]*[\wàèìòùáéíóúäëïöü'!,])(?:\s*(?:-(?: Single by)?)\s*)([\wàèìòùáéíóúäëïöü'!, ]*[\wàèìòùáéíóúäëïöü'!,])(?:[\s+|.])(?:.*)/i
     ]
   },{
-    query: "openspotify",
-    filters: []
-  },{
     query: "#Now Playing",
-    filters: []
+    filters: [
+      /(?:#Now Playing )((?:\S-\S|[^-])*)(?:\s+-)?(?:\s+-\s+)([\w\s]*\w)(?:.*\s+.*http\S*)/i;
+    ]
   },{
     query: "#nowplaying",
     filters: []
@@ -64,6 +63,9 @@ module.exports = [
     filters: []
   },{
     query: "Posted a new song:",
+    filters: []
+  },{
+    query: "openspotify",
     filters: []
   }
 ];
