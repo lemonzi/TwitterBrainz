@@ -13,12 +13,14 @@ module.exports = [
   },{
     query: "#nowplaying",
     filters: [
-      /(?:#NowPlaying )?(?:#NowPlaying: )?(.*)(?: by )(.*)(?: on.*)/i,
-      /(?:#NowPlaying )?(?:#NowPlaying: )?(.*)(?: - )(.*\S)(?:\s::)(?:.*\s+.*http\S*)/i,
-      /(?:#NowPlaying )(.*)(?: - )(.*)(?:[\W]+)(?:.*\s+.*http\S*)/i,
-      /(.*)(?: - )(.*\S)(?:.*\s+.*http\S*)/i,
-      /(?:♫ )(.*\S)(?: – )(.*)(?:.*\s+.*http\S*)/i,
-      /(?:#nowplaying )(?:.*~ )(.*)(?: \| )(.*)(?: \|\|\|.*)/i
+      /(?:#NowPlaying )?(?:#NowPlaying: )?(?:[\u266A-\u266F])?(.*)(?: by )(.*)(?: (?:on|http).*)/i,
+      /(?:#NowPlaying )?(?:#NowPlaying: )?(?:[\u266A-\u266F])?(.*)(?: - )(.*)(?: (?:on|http).*)/i,
+      /(?:#NowPlaying )?(?:#NowPlaying: )?(?:[\u266A-\u266F])?(.*)(?: - )(.*\S)(?:\s::)(?:.*\s+.*http\S*)/i,
+      /(?:#NowPlaying )?(?:#NowPlaying: )?(?:[\u266A-\u266F])?(.*)(?: - )(.*)(?:[\W]+)(?:.*\s+.*http\S*)/i,
+      /(?:[\u266A-\u266F])?(?:[\u266A-\u266F] )?(.*)(?: - )(.*\S)(?:.*\s+.*http\S*)/i,
+      /(?:[\u266A-\u266F])?(?:[\u266A-\u266F] )?(.*\S)(?: – )(.*)(?:.*\s+.*http\S*)/i,
+      /(?:#nowplaying )?(?:[\u266A-\u266F])?(?:[\u266A-\u266F] )?(?:.*~ )(.*)(?: \| )(.*)(?: \|\|\|.*)/i,
+      /(?:[\u266A-\u266F])?(?:[\u266A-\u266F] )?(.*)(?: by )(.*)(?: #nowplaying)/i
     ]
   },{
     query: "#SoundCloud",
@@ -73,6 +75,12 @@ module.exports = [
     filters: []
   },{
     query: "openspotify",
+    filters: []
+  },{
+    query: "I\'m listening to",
+    filters: []
+  },{
+    query: "Enjoy listening to",
     filters: []
   }
 ];
