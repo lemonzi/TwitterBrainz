@@ -21,15 +21,37 @@ io.sockets.on('connection', function (socket) {
 
 // TEST TWITTER
 
+var parseSong = function(err, resp, filters) {
+  if (err) console.log('Error:', resp);
+  var res = null;
+  for (var i = 0; i < filters.length; i++) {
+    res = filters[i].exec(resp.text);
+    if (res) {
+      console.log(resp.text,"\n--> FILTER: ",[res[1],res[2]],'\n\n');
+      return [res[1],res[2]];
+    }
+  }
+  console.log("Could not match twit: \n", resp.text, '\n\n');
+  return null;  
+}
+
+filters = [
+  
+]
+
 var cbTwtr = function(err, resp) {
-  if (err) console.log('error:', resp);
-  else if (resp.location) console.log(resp.text);
+  if (err) console.log('Error: ', resp);
+  else console.log(resp.text);
 };
 
-var keywords = require('./keywords.json');
+var keywords = require('./keywords.js');
 
-//backend.getTweets(keywords.join(' OR '), 1000, cbTwtr);
-backend.getTweetsRealtime(keywords, cbTwtr);
+//backend.getTweets([keywords[0].query], 100, function(err,resp) {
+  // parseSong(err, resp, keywords[0].filters);
+//});
+backend.getTweetsRealtime([keywords[0].query], function(err,resp) {
+  parseSong(err, resp, keywords[0].filters);
+});
 
 // TEST ACOUSTICBRAINZ
 
@@ -48,3 +70,6 @@ var cb = function(err, resp) {
 //backend.musicBrainz({artist:'Michael Jackson',limit:100},cb);
 //backend.musicBrainz({recording:'Shake it off', artist:'Taylor Swift'},cb);
 //backend.musicBrainz({recording:'Hurt', artist:'Johnny Cash'},cb);
+//backend.musicBrainz({recording:'Yesterday', artist:'The beatles'},cb);
+//backend.musicBrainz({recording:'I\'m yours', artist:'Jason Mraz'},cb);
+//backend.musicBrainz({recording:'Waka waka', artist:'Shakira'},cb);
