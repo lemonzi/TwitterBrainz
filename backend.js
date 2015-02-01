@@ -8,7 +8,7 @@ var Twit = require('twit'),
 var T = new Twit(secrets.twitter);
 
 exports.getTweets = function(query, callback) {
-  getTweetsRecursive(query, undefined, callback);
+  getTweetsRecursive(query, Number.MAX_VALUE, callback);
 };
 
 exports.getTweetsRealtime = function(query, callback) {
@@ -24,6 +24,7 @@ exports.getTweetsRealtime = function(query, callback) {
 
 function getTweetsRecursive(query, maxId, callback) {
   var newId = maxId;
+  console.log('Loading more tweets...\n');
   T.get('search/tweets', {
     q: query,
     count: 100,
@@ -41,6 +42,9 @@ function getTweetsRecursive(query, maxId, callback) {
         setTimeout(function() {
           getTweetsRecursive(query, newId, callback);
         }, 1000);
+      } else {
+        console.log('Finished retrieveing tweets. Connecting to realtime stream...\n');
+        exports.getTweetsRealtime(query, callback);
       }
     }
   });
