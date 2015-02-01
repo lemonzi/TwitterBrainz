@@ -48,7 +48,7 @@ setInterval(function() {
 }, 1000);
 
 exports.query = function(query, mbCallback) {
-  if (queue.length < 10000) queue.push({
+  if (queue.length < 100000) queue.push({
     query:query,
     callback: mbCallback
   });

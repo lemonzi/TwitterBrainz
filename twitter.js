@@ -24,7 +24,7 @@ exports.getTweetsRealtime = function(query, callback) {
 
 function getTweetsRecursive(query, maxId, callback) {
   var newId = maxId || Number.MAX_VALUE;
-  console.log('Loading tweets...'.gray);
+  console.log('Loading more tweets...'.gray);
   T.get('search/tweets', {
     q: query,
     count: 100,
@@ -38,10 +38,10 @@ function getTweetsRecursive(query, maxId, callback) {
         newId = Math.min(newId, tweet.id);
         processTweet(tweet, callback);
       });
-      if (newId < maxId) {
+      if (maxId === 0 || newId < maxId) {
         setTimeout(function() {
           getTweetsRecursive(query, newId, callback);
-        }, 5000);
+        }, 120000);
       } else {
         console.log('Finished retrieving tweets. Connecting to realtime stream...'.gray);
         exports.getTweetsRealtime(query, callback);
