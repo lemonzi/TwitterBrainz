@@ -41,7 +41,7 @@ function getTweetsRecursive(query, maxId, callback) {
       if (newId < maxId) {
         setTimeout(function() {
           getTweetsRecursive(query, newId, callback);
-        }, 1000);
+        }, 5000);
       } else {
         console.log('Finished retrieving tweets. Connecting to realtime stream...'.gray);
         exports.getTweetsRealtime(query, callback);
