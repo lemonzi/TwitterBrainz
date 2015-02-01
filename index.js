@@ -43,12 +43,12 @@ var parseSong = function(err, twit, filters) {
   return null;
 };
 
-twitter.getTweets([keywords[0].query], function(err,twit) {
+twitter.getTweets([keywords[2].query], function(err,twit) {
   if (err) {
     console.error(twit.red);
     return;
   }
-  var data = parseSong(err, twit.text, keywords[0].filters);
+  var data = parseSong(err, twit.text, keywords[2].filters);
   if (data) {
     brainz.query({
       recording: data[0],

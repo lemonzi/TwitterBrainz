@@ -7,7 +7,7 @@ var nb = new NB({});
 exports.query = function(query, mbCallback) {
   nb.search('recording', query, function(err,resp){
     if (err) {
-      mbCallback(true, 'MusicBrainz server error');
+      mbCallback(true, 'MusicBrainz server error: ' + err.error);
       return;
     }
     var songs = resp.recordings;

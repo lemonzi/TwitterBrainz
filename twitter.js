@@ -18,7 +18,7 @@ exports.getTweetsRealtime = function(query, callback) {
     processTweet(tweet, callback);
   });
   stream.on('error', function(data) {
-    callback(true, 'Twitter API error');
+    callback(true, 'Twitter API error: ' + data);
   });
 };
 
