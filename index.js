@@ -15,10 +15,7 @@ app.get('/', function(req, res){
 });
 
 io.sockets.on('connection', function (socket) {
-    // Send the Tweets to the browser as they come in
-    twitter.getTweets({track: ['nashville']}, function(err, resp) {
-      io.sockets.emit('stream', utils.linkify(resp.text), resp.username, resp.avatar);
-    });
+  // Say hi
 });
 
 server.listen(process.env.PORT || 8080);
@@ -48,7 +45,7 @@ var runBackend = function(keyword) {
         if (err2) console.log(
           acoustic.red, '\n',
           twit.text, '\n',
-          '    ---> FILTER: '.blue, data
+          '    ---> FILTER: '.magenta, data
         );
         else console.log(
           'SONG FOUND:\n'.green,
@@ -61,6 +58,18 @@ var runBackend = function(keyword) {
   });
 };
 
-runBackend(keywords[0]);
-runBackend(keywords[1]);
-runBackend(keywords[2]);
+keywords.forEach(function(keyword) {
+  if (keyword.filters.length > 0)
+    runBackend(keyword);
+});
+
+// This is where the magic happens
+old_log = console.log;
+console.log = function() {
+  var out = "";
+  for (var i = 0; i < arguments.length; i++) {
+    out += arguments[i];
+  }
+  io.sockets.emit('update', out);
+  old_log.apply(console,arguments);
+};

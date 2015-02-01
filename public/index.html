@@ -6,12 +6,20 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link href="./jcubic/css/jquery.terminal.css" rel="stylesheet"/>
   </head>
   <body>
   <div class="bar"></div>
+    <p class="give-me-some-space"><!-- Open the console to start Lissajous.<br/>Drop .wav files into to the window to import them.<br/><br/>
+    !-->
+    TwitterBrainz ~ <a href="https://github.com/lemonzi/TwitterBrainz" target="_blank">Code</a></p>
 
-	<script src="/socket.io/socket.io.js"></script>
+    <div id="terminal"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./jcubic/js/jquery-1.7.1.min.js"></script>
+    <script src="./jcubic/js/jquery.mousewheel-min.js"></script>
+    <script src="./jcubic/js/jquery.terminal-min.js"></script>
+    <script src="./js/palette.js"></script>
     <script src="./js/client.js"></script>
-
   </body>
 </html>

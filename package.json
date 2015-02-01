@@ -1,16 +1,16 @@
 {
   "name": "TwitterBrainz",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Real-time visualization of acoustic features of songs being tweeted.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/lemonzi/TwitterBrainz.git"
   },
-  "author": "",
+  "author": "Quim Llimona, Angel Farguell",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/lemonzi/TwitterBrainz/issues"

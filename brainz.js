@@ -19,7 +19,7 @@ setInterval(function() {
     }
     var songs = resp.recordings;
     if (!songs || songs.length === 0) {
-      mbCallback(true, 'No songs found [queue size: ' + queue.length + ']');
+      mbCallback(true, 'No songs found (queue size: ' + queue.length + ')');
       return;
     }
     // now, query acousticBrainz
@@ -31,7 +31,7 @@ setInterval(function() {
           exports.acousticBrainz(songs[songCount].id, abCallback);
         else
           mbCallback(true,
-            'No acoustic features found [queue size: ' + queue.length + ']'
+            'No acoustic features found (queue size: ' + queue.length + ')'
           );
       } else {
         var title = songs[songCount].title;
