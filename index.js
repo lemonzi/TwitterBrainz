@@ -42,17 +42,21 @@ var parseSong = function(err, resp, filters) {
 };
 
 var cbTwtr = function(err, resp) {
-  if (err) console.log('error:', resp);
-  else /*if (resp.location)*/ console.log(resp.text);
+  if (err) console.log('Error: ', resp);
+  else console.log(resp.text,"\n\n");
 };
 
-backend.getTweets([keywords[0].query], function(err,resp) {
-  parseSong(err, resp, keywords[0].filters);
-});
+// backend.getTweets([keywords[0].query], 100, function(err,resp) {
+//   parseSong(err, resp, keywords[0].filters);
+// });
 
 // backend.getTweetsRealtime([keywords[0].query], function(err,resp) {
 //   parseSong(err, resp, keywords[0].filters);
 // });
+
+// backend.getTweets([keywords[1].query],100,cbTwtr);
+
+backend.getTweetsRealtime([keywords[2].query],cbTwtr);
 
 // TEST ACOUSTICBRAINZ
 
