@@ -46,7 +46,7 @@ var cbTwtr = function(err, resp) {
   else console.log(resp.text,"\n\n");
 };
 
-// backend.getTweets([keywords[0].query], 100, function(err,resp) {
+// backend.getTweets([keywords[0].query], function(err,resp) {
 //   parseSong(err, resp, keywords[0].filters);
 // });
 
@@ -54,7 +54,7 @@ var cbTwtr = function(err, resp) {
 //   parseSong(err, resp, keywords[0].filters);
 // });
 
-// backend.getTweets([keywords[1].query],100,cbTwtr);
+// backend.getTweets([keywords[1].query], cbTwtr);
 
 backend.getTweetsRealtime([keywords[2].query],cbTwtr);
 

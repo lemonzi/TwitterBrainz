@@ -2,17 +2,24 @@ module.exports = [
   { 
     query: "itunes apple com album",
     filters: [
-      /(?:.*iTunes(?:[^a-z]+\s|】))(.*) \W ([\w ]*)(?:.*\s+.*http\S*)/i,
+      /(?:.*iTunes(?:[^a-z]+\s|】))(\S.*) \W ([\w ]*)(?:.*\s+.*http\S*)/i,
       /([\wàèìòùáéíóúäëïöü'!, ]*[\wàèìòùáéíóúäëïöü'!,])(?:\s*(?:-(?: Single by)?)\s*)([\wàèìòùáéíóúäëïöü'!, ]*[\wàèìòùáéíóúäëïöü'!,])(?:[\s+|.])(?:.*)/i
     ]
   },{
     query: "#Now Playing",
     filters: [
-      /(?:#Now Playing )((?:\S-\S|[^-])*)(?:\s+-)?(?:\s+-\s+)([\w\s]*\w)(?:.*\s+.*http\S*)/i;
+      /(?:#Now Playing )((?:\S-\S|[^-])*)(?:\s+-)?(?:\s+-\s+)([\w\s]*\w)(?:.*\s+.*http\S*)/i
     ]
   },{
     query: "#nowplaying",
-    filters: []
+    filters: [
+      /(?:#NowPlaying )?(?:#NowPlaying: )?(.*)(?: by )(.*)(?: on.*)/i,
+      /(?:#NowPlaying )?(?:#NowPlaying: )?(.*)(?: - )(.*\S)(?:\s::)(?:.*\s+.*http\S*)/i,
+      /(?:#NowPlaying )(.*)(?: - )(.*)(?:[\W]+)(?:.*\s+.*http\S*)/i,
+      /(.*)(?: - )(.*\S)(?:.*\s+.*http\S*)/i,
+      /(?:♫ )(.*\S)(?: – )(.*)(?:.*\s+.*http\S*)/i,
+      /(?:#nowplaying )(?:.*~ )(.*)(?: \| )(.*)(?: \|\|\|.*)/i
+    ]
   },{
     query: "#SoundCloud",
     filters: []
