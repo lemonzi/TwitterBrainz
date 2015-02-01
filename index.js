@@ -33,11 +33,11 @@ var parseSong = function(err, resp, filters) {
   for (var i = 0; i < filters.length; i++) {
     res = filters[i].exec(resp.text);
     if (res) {
-      console.log(resp.text,"\n--> FILTER: ",[res[1],res[2]],'\n\n');
+      console.log(resp.text,"\n\033[31m---> FILTER \033[0m: ",[res[1],res[2]],'\n');
       return [res[1],res[2]];
     }
   }
-  console.log("Could not match twit: \n", resp.text, '\n\n');
+  console.log("Could not match twit: \n", resp.text, '\n');
   return null;
 };
 
@@ -46,9 +46,9 @@ var cbTwtr = function(err, resp) {
   else console.log(resp.text,"\n\n");
 };
 
-// backend.getTweets([keywords[0].query], function(err,resp) {
-//   parseSong(err, resp, keywords[0].filters);
-// });
+backend.getTweets([keywords[0].query], function(err,resp) {
+  parseSong(err, resp, keywords[0].filters);
+});
 
 // backend.getTweetsRealtime([keywords[0].query], function(err,resp) {
 //   parseSong(err, resp, keywords[0].filters);
@@ -56,7 +56,7 @@ var cbTwtr = function(err, resp) {
 
 // backend.getTweets([keywords[1].query], cbTwtr);
 
-backend.getTweetsRealtime([keywords[2].query],cbTwtr);
+// backend.getTweetsRealtime([keywords[2].query], cbTwtr);
 
 // TEST ACOUSTICBRAINZ
 
