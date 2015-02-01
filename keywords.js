@@ -1,5 +1,5 @@
 module.exports = [
-  { 
+  {
     query: "itunes apple com album",
     filters: [
       /(?:.*iTunes(?:[^a-z]+\s|】))(\S.*) \W ([\w ]*)(?:.*\s+.*http\S*)/i,

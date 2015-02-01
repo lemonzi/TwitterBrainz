@@ -1,10 +1,12 @@
 var express = require('express'),
+    colors = require('colors'),
     app = express(),
     http = require('http'),
     server = http.createServer(app),
     io = require('socket.io').listen(server),
     utils = require('./utils.js'),
-    backend = require('./backend.js'),
+    brainz = require('./brainz.js'),
+    twitter = require('./twitter.js'),
     keywords = require('./keywords.js');
 
 /* FOR WHEN WE HAVE THE CLIENT
@@ -16,7 +18,7 @@ app.get('/', function(req, res){
 
 io.sockets.on('connection', function (socket) {
     // Send the Tweets to the browser as they come in
-    getTweets({track: ['nashville']}, function(err, resp) {
+    twitter.getTweets({track: ['nashville']}, function(err, resp) {
       io.sockets.emit('stream', utils.linkify(resp.text), resp.username, resp.avatar);
     });
 });
@@ -27,54 +29,61 @@ server.listen(process.env.PORT || 8080);
 
 // TEST TWITTER
 
-var parseSong = function(err, resp, filters) {
-  if (err) console.log('Error:', resp);
+var parseSong = function(err, twit, filters) {
+  if (err) console.error(twit.red);
   var res = null;
   for (var i = 0; i < filters.length; i++) {
-    res = filters[i].exec(resp.text);
+    res = filters[i].exec(twit);
     if (res) {
-      console.log(resp.text,"\n\033[31m---> FILTER \033[0m: ",[res[1],res[2]],'\n');
+      // console.log(twit, '\n---> FILTER: '.green, [res[1],res[2]]);
       return [res[1],res[2]];
     }
   }
-  console.log("Could not match twit: \n", resp.text, '\n');
+  console.log('Could not match twit: \n'.yellow, twit);
   return null;
 };
 
-var cbTwtr = function(err, resp) {
-  if (err) console.log('Error: ', resp);
-  else console.log(resp.text,"\n\n");
-};
-
-backend.getTweets([keywords[0].query], function(err,resp) {
-  parseSong(err, resp, keywords[0].filters);
+twitter.getTweets([keywords[0].query], function(err,twit) {
+  if (err) {
+    console.error(twit.red);
+    return;
+  }
+  var data = parseSong(err, twit.text, keywords[0].filters);
+  if (data) {
+    brainz.query({
+      recording: data[0],
+      artist: data[1]
+    }, function(err2, acoustic) {
+      if (err2) console.error(
+        (acoustic + ': \n').red,
+        twit.text,
+        '\n    ---> FILTER: '.blue, data
+      );
+      else console.log(
+        acoustic.green,
+        '\n    ---> FILTER: '.green, data
+      );
+    });
+  }
 });
-
-// backend.getTweetsRealtime([keywords[0].query], function(err,resp) {
-//   parseSong(err, resp, keywords[0].filters);
-// });
-
-// backend.getTweets([keywords[1].query], cbTwtr);
-
-// backend.getTweetsRealtime([keywords[2].query], cbTwtr);
 
 // TEST ACOUSTICBRAINZ
 
-var cb = function(err, resp) {
-  if (err) console.log('error:', resp);
-  else console.log(resp);
-};
+// var printCb = function(err, resp) {
+//   if (err) console.error(resp.red);
+//   else console.log(resp.green,'\n');
+// };
 
-//backend.musicBrainz({recording:'Beat it', artist:'Michael Jackson'}, cb);
-//backend.musicBrainz({recording:'Smooth Criminal', artist:'Michael Jackson'}, cb);
-//backend.musicBrainz({recording:'Heal the World', artist:'Michael Jackson'}, cb);
-//backend.musicBrainz({recording:'Eine Kleine Nachtmusic', artist:'Mozart'}, cb);
-//backend.musicBrainz({recording:'Invisible kid', artist:'Metallica'}, cb);
-//backend.musicBrainz({recording:'Heal the World', artist:'Michael Jackson'}, cb);
-//backend.musicBrainz({recording:'All of me', artist:'Jon Schmidt'}, cb);
-//backend.musicBrainz({artist:'Michael Jackson',limit:100},cb);
-//backend.musicBrainz({recording:'Shake it off', artist:'Taylor Swift'},cb);
-//backend.musicBrainz({recording:'Hurt', artist:'Johnny Cash'},cb);
-//backend.musicBrainz({recording:'Yesterday', artist:'The beatles'},cb);
-//backend.musicBrainz({recording:'I\'m yours', artist:'Jason Mraz'},cb);
-//backend.musicBrainz({recording:'Waka waka', artist:'Shakira'},cb);
+//brainz.query({recording:'Beat it', artist:'Michael Jackson'}, printCb);
+//brainz.query({recording:'Smooth Criminal', artist:'Michael Jackson'}, printCb);
+//brainz.query({recording:'Heal the World', artist:'Michael Jackson'}, printCb);
+//brainz.query({recording:'Eine Kleine Nachtmusic', artist:'Mozart'}, printCb);
+//brainz.query({recording:'Invisible kid', artist:'Metallica'}, printCb);
+//brainz.query({recording:'Heal the World', artist:'Michael Jackson'}, printCb);
+//brainz.query({recording:'All of me', artist:'Jon Schmidt'}, printCb);
+//brainz.query({artist:'Michael Jackson',limit:100},printCb);
+//brainz.query({recording:'Shake it off', artist:'Taylor Swift'},printCb);
+//brainz.query({recording:'Hurt', artist:'Johnny Cash'},printCb);
+//brainz.query({recording:'Yesterday', artist:'The beatles'},printCb);
+//brainz.query({recording:'I\'m yours', artist:'Jason Mraz'},printCb);
+//brainz.query({recording:'Waka waka', artist:'Shakira'},printCb);
