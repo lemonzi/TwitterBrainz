@@ -6,16 +6,21 @@ var express = require('express'),
     utils = require('./utils.js'),
     backend = require('./backend.js');
 
-// server.listen(process.env.PORT || 8080);
-
 /* FOR WHEN WE HAVE THE CLIENT
 
+app.use(express.static(__dirname + '/public'));
+app.get('/', function(req, res){
+  res.sendFile(__dirname+'/index.html');
+});
+
 io.sockets.on('connection', function (socket) {
-    // Send the Tweet to the browser
+    // Send the Tweets to the browser as they come in
     getTweets({track: ['nashville']}, function(err, resp) {
       io.sockets.emit('stream', utils.linkify(resp.text), resp.username, resp.avatar);
     });
 });
+
+server.listen(process.env.PORT || 8080);
 
 */
 
@@ -32,23 +37,19 @@ var parseSong = function(err, resp, filters) {
     }
   }
   console.log("Could not match twit: \n", resp.text, '\n\n');
-  return null;  
+  return null;
 }
 
-filters = [
-  
-]
-
 var cbTwtr = function(err, resp) {
-  if (err) console.log('Error: ', resp);
-  else console.log(resp.text);
+  if (err) console.log('error:', resp);
+  else /*if (resp.location)*/ console.log(resp.text);
 };
 
 var keywords = require('./keywords.js');
 
-//backend.getTweets([keywords[0].query], 100, function(err,resp) {
-  // parseSong(err, resp, keywords[0].filters);
-//});
+// backend.getTweets([keywords[0].query], 100, function(err,resp) {
+//   parseSong(err, resp, keywords[0].filters);
+// });
 backend.getTweetsRealtime([keywords[0].query], function(err,resp) {
   parseSong(err, resp, keywords[0].filters);
 });

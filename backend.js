@@ -7,17 +7,8 @@ var Twit = require('twit'),
 
 var T = new Twit(secrets.twitter);
 
-exports.getTweets = function(query, count, callback) {
-  T.get('search/tweets', {
-    q: query,
-    count: count,
-    location: [-180, -90, 180, 90] ///// THIS IS WROOOOOOOOONG
-  }, function(err, data, response) {
-    if (err) callback(true, err);
-    else data.statuses.forEach(function(tweet) {
-      processTweet(tweet, callback);
-    });
-  });
+exports.getTweets = function(query, callback) {
+  getTweetsRecursive(query, undefined, callback);
 };
 
 exports.getTweetsRealtime = function(query, callback) {
@@ -31,7 +22,31 @@ exports.getTweetsRealtime = function(query, callback) {
   });
 };
 
-var processTweet = function(tweet, callback) {
+function getTweetsRecursive(query, maxId, callback) {
+  var newId = maxId;
+  T.get('search/tweets', {
+    q: query,
+    count: 100,
+    result_type: 'popular',
+    max_id: maxId,
+    location: [-180, -90, 180, 90] ///// THIS IS WROOOOOOOOONG
+  }, function(err, data, response) {
+    if (err) callback(true, err);
+    else {
+      data.statuses.forEach(function(tweet) {
+        newId = Math.min(newId, tweet.id);
+        processTweet(tweet, callback);
+      });
+      if (newId < maxId) {
+        setTimeout(function() {
+          getTweetsRecursive(query, newId, callback);
+        }, 1000);
+      }
+    }
+  });
+}
+
+function processTweet(tweet, callback) {
   var location;
   if (!tweet.coordinates) {
     // do something with the user
@@ -44,7 +59,7 @@ var processTweet = function(tweet, callback) {
     avatar: tweet.user.profile_image_url,
     location: location
   });
-};
+}
 
 // THIS IS FOR MUSICBRAINZ (already glued to acousticbrainz)
 
