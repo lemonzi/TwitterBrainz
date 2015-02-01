@@ -4,7 +4,8 @@ var express = require('express'),
     server = http.createServer(app),
     io = require('socket.io').listen(server),
     utils = require('./utils.js'),
-    backend = require('./backend.js');
+    backend = require('./backend.js'),
+    keywords = require('./keywords.js');
 
 /* FOR WHEN WE HAVE THE CLIENT
 
@@ -38,21 +39,20 @@ var parseSong = function(err, resp, filters) {
   }
   console.log("Could not match twit: \n", resp.text, '\n\n');
   return null;
-}
+};
 
 var cbTwtr = function(err, resp) {
   if (err) console.log('error:', resp);
   else /*if (resp.location)*/ console.log(resp.text);
 };
 
-var keywords = require('./keywords.js');
-
-// backend.getTweets([keywords[0].query], 100, function(err,resp) {
-//   parseSong(err, resp, keywords[0].filters);
-// });
-backend.getTweetsRealtime([keywords[0].query], function(err,resp) {
+backend.getTweets([keywords[0].query], function(err,resp) {
   parseSong(err, resp, keywords[0].filters);
 });
+
+// backend.getTweetsRealtime([keywords[0].query], function(err,resp) {
+//   parseSong(err, resp, keywords[0].filters);
+// });
 
 // TEST ACOUSTICBRAINZ
 
