@@ -23,8 +23,7 @@ io.sockets.on('connection', function (socket) {
 
 server.listen(process.env.PORT || 8080);
 
-var parseSong = function(err, twit, filters) {
-  if (err) console.log(twit.red);
+var parseSong = function(twit, filters) {
   var res = null;
   for (var i = 0; i < filters.length; i++) {
     res = filters[i].exec(twit);
@@ -40,7 +39,7 @@ var runBackend = function(keyword) {
       console.log(twit.red);
       return;
     }
-    var data = parseSong(err, twit.text, keyword.filters);
+    var data = parseSong(twit.text, keyword.filters);
     if (data) {
       brainz.query({
         recording: data[0],
@@ -52,6 +51,7 @@ var runBackend = function(keyword) {
           '    ---> FILTER: '.blue, data
         );
         else console.log(
+          'SONG FOUND:\n'.green,
           JSON.stringify(acoustic).green, '\n',
           twit.text, '\n',
           '    ---> FILTER: '.green, data
