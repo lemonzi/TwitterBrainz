@@ -80,12 +80,13 @@ var runBackend = function(keywords) {
 
 // Start backend
 
+brainz.interval = 3;
 twitter.realtime = false;
 twitter.count = 30;
 var active_keywords = keywords.filter(function(k) {
   return k.filters.length > 0;
 });
-twitter.interval = active_keywords.length * 5;
+twitter.interval = active_keywords.length * 15;
 runBackend(active_keywords);
 
 
