@@ -3,9 +3,17 @@ var Twit = require('twit'),
     request = require('request-json'),
     secrets = require('./secrets.json');
 
-// THIS IS FOR TWITTER
-
 var T = new Twit(secrets.twitter);
+
+// Interval in seconds between calls to the Twitter Search API
+// You can modify this during the runtime
+// No effect after switch to realtime
+exports.interval = 120;
+
+// Start using the Twitter Search API. When it does not
+// return more data, we switch to the Streaming API.
+// This switch can be forced by changing this.
+exports.realtime = false;
 
 exports.getTweets = function(query, callback) {
   getTweetsRecursive(query, 0, callback);
@@ -38,10 +46,10 @@ function getTweetsRecursive(query, maxId, callback) {
         newId = Math.min(newId, tweet.id);
         processTweet(tweet, callback);
       });
-      if (maxId === 0 || newId < maxId) {
+      if ((maxId === 0 || newId < maxId) && !exports.realtime) {
         setTimeout(function() {
           getTweetsRecursive(query, newId, callback);
-        }, 120000);
+        }, exports.interval);
       } else {
         console.log('Finished retrieving tweets. Connecting to realtime stream...'.gray);
         exports.getTweetsRealtime(query, callback);

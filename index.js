@@ -9,6 +9,8 @@ var express = require('express'),
     twitter = require('./twitter.js'),
     keywords = require('./keywords.js');
 
+// Init webserver
+
 app.use(express.static(__dirname + '/public'));
 app.get('/', function(req, res){
   res.sendFile(__dirname+'/index.html');
@@ -20,13 +22,15 @@ io.sockets.on('connection', function (socket) {
 
 server.listen(process.env.PORT || 8080);
 
+// Main functions
+
 var parseSong = function(twit, filters) {
   var res = null;
   for (var i = 0; i < filters.length; i++) {
     res = filters[i].exec(twit);
     if (res) return [res[1],res[2]];
   }
-  // console.log('Could not match twit: \n'.yellow, twit);
+  console.log('Could not match twit: \n'.yellow, twit);
   return null;
 };
 
@@ -58,6 +62,9 @@ var runBackend = function(keyword) {
   });
 };
 
+// Start backend
+
+twitter.interval = 10;
 keywords.forEach(function(keyword) {
   if (keyword.filters.length > 0)
     runBackend(keyword);

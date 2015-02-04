@@ -31,17 +31,21 @@ module.exports = [
       /(?:#NowPlaying )?(?:#NowPlaying: )?(?:[\u266A-\u266F] )?(?:[\u266A-\u266F])?(.*)(?: by | - | – )(.*)(?: (?:on|http).*)/i,
       /(?:#NowPlaying )?(?:#NowPlaying: )?(?:[\u266A-\u266F] )?(?:[\u266A-\u266F])?(.*)(?: by | - | – )(.*)(?:[\W]+)(?:.*\s+.*http\S*)/i,
       /(?:[\u266A-\u266F]\s)?(.*)(?: by | - | – )(.*\S)(?:[\u266A-\u266F]?\s)?(?:.*\s+.*http\S*)/i,
-      /(?:[\u266A-\u266F]\s)?(.*\S)(?: by | - | – )(.*)(?:[\u266A-\u266F]?\s)?(?:.*\s+.*http\S*)/i   
+      /(?:[\u266A-\u266F]\s)?(.*\S)(?: by | - | – )(.*)(?:[\u266A-\u266F]?\s)?(?:.*\s+.*http\S*)/i
     ]
   },{
     query: "#SoundCloud",
-    filters: []
+    filters: [
+      /(?:Listen to |A new favorite: )(.*?)(?: by )(.*?)(?: #np on #SoundCloud| http| on #SoundCloud| via #SoundCloud)/i
+    ]
   },{
     query: "#GooglePlayMusic",
     filters: []
   },{
     query: "#np",
-    filters: []
+    filters: [
+      /(?:#np )(.*)(?: - )(.*?)(?: *[:@]? http)/i
+    ]
   },{
     query: "@doubleTwist",
     filters: []
@@ -50,9 +54,6 @@ module.exports = [
     filters: []
   },{
     query: "@YouTube",
-    filters: []
-  },{
-    query: "#Spotify",
     filters: []
   },{
     query: "#PowerAMP",
@@ -89,7 +90,9 @@ module.exports = [
     filters: []
   },{
     query: "I\'m listening to",
-    filters: []
+    filters: [
+      /(?:I'm listening to )(.*?[^"])(?: by "?)(.*?[^\s])(?: *http)/i
+    ]
   },{
     query: "Enjoy listening to",
     filters: []
