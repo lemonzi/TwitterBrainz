@@ -24,39 +24,46 @@ server.listen(process.env.PORT || 8080);
 
 // Main functions
 
-var parseSong = function(twit, filters) {
-  var res = null;
-  for (var i = 0; i < filters.length; i++) {
-    res = filters[i].exec(twit);
-    if (res) return [res[1],res[2]];
+var parseSong = function(twit, keywords) {
+  if (twit.toLowerCase().indexOf("mariahcarey") >= 0) return null;
+  for (var j = 0; j < keywords.length; j++) {
+    var k = keywords[j];
+    if (twit.toLowerCase().indexOf(k.query.toLowerCase()) < 0)
+      continue;
+    var res = null;
+    for (var i = 0; i < k.filters.length; i++) {
+      res = k.filters[i].exec(twit);
+      if (res) return [res[1],res[2]];
+    }
   }
   // console.log('Could not match twit: \n'.yellow, twit);
   return null;
 };
 
-var runBackend = function(keyword) {
-  twitter.getTweets([keyword.query], function(err,twit) {
+var runBackend = function(keywords) {
+  var queries = keywords.map(function(k) {return k.query;});
+  twitter.getTweets(queries, function(err,twit) {
     if (err) {
       console.log(twit.red);
       return;
     }
-    var data = parseSong(twit.text, keyword.filters);
+    var data = parseSong(twit.text, keywords);
     if (data) {
       brainz.query({
         recording: data[0],
         artist: data[1]
       }, function(err2, acoustic) {
-        // if (err2) console.log(
-        //   acoustic.red, '\n',
-        //   twit.text, '\n',
-        //   '    ---> FILTER: '.magenta, data
-        // );
-        if (err2) return;
+        if (err2) console.log(
+          acoustic.red, '\n',
+          twit.text, '\n',
+          '    ---> FILTER: '.magenta, JSON.stringify(data).yellow
+        );
+        // if (err2) return;
         else console.log(
           'SONG FOUND:\n'.green,
           JSON.stringify(acoustic).green, '\n',
           twit.text, '\n',
-          '    ---> FILTER: '.green, data
+          '    ---> FILTER: '.magenta, JSON.stringify(data).yellow
         );
       });
     }
@@ -65,14 +72,14 @@ var runBackend = function(keyword) {
 
 // Start backend
 
+twitter.realtime = false;
 twitter.count = 30;
-twitter.realtime = true;
+
 var active_keywords = keywords.filter(function(k) {
   return k.filters.length > 0;
 });
-// Automatically set this so we do not pass rate limit
 twitter.interval = active_keywords.length * 5;
-active_keywords.forEach(runBackend);
+runBackend(active_keywords);
 
 // This is where the magic happens
 old_log = console.log;

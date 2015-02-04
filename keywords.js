@@ -1,11 +1,26 @@
 module.exports = [
   {
+    query: "I\'m listening to",
+    filters: [
+      /(?:I'm listening to (?:.*?["'‘])?)([^"'‘]*?)(?:["'‘]? by ["'‘]?)([^'"‘]*?[^\s'"‘])(?:['"‘.]+| *http)/i
+    ]
+  },{
+    query: "#SoundCloud",
+    filters: [
+      /(?:Listen to |A new favorite: )(.*?)(?: by )(.*?)(?: #np on #SoundCloud| http| on #SoundCloud| via #SoundCloud)/i
+    ]
+  },{
     query: "itunes apple com album",
     filters: [
       /(?:Purchase )?(?:[\d.]+?\s)(.*\S)(?: - )(.*)(?:.*\s+.*http\S*)/i,
       /(?:.*iTunes(?:[^a-z]+\s|】))(\S.*) \W ([\w ]*)(?:.*\s+.*http\S*)/i,
       /(\w[\wàèìòùáéíóúäëïöü'!, ]*[\wàèìòùáéíóúäëïöü'!,])(?:\s*(?:-(?: Single by)?)\s*)([\wàèìòùáéíóúäëïöü'!, ]*[\wàèìòùáéíóúäëïöü'!,])(?: from)(?:[\s+|.])(?:.*)/i,
       /([\wàèìòùáéíóúäëïöü'!, ]*[\wàèìòùáéíóúäëïöü'!,])(?:\s*(?:-(?: Single by)?)\s*)([\wàèìòùáéíóúäëïöü'!, ]*[\wàèìòùáéíóúäëïöü'!,])(?:[\s+|.])(?:.*)/i
+    ]
+  },{
+    query: "#np",
+    filters: [
+      /(?:#np )(.*)(?: - )(.*?)(?: *[:@]? http)/i
     ]
   },{
     query: "#Now Playing",
@@ -34,18 +49,8 @@ module.exports = [
       /(?:[\u266A-\u266F]\s)?(.*\S)(?: by | - | – )(.*)(?:[\u266A-\u266F]?\s)?(?:.*\s+.*http\S*)/i
     ]
   },{
-    query: "#SoundCloud",
-    filters: [
-      /(?:Listen to |A new favorite: )(.*?)(?: by )(.*?)(?: #np on #SoundCloud| http| on #SoundCloud| via #SoundCloud)/i
-    ]
-  },{
     query: "#GooglePlayMusic",
     filters: []
-  },{
-    query: "#np",
-    filters: [
-      /(?:#np )(.*)(?: - )(.*?)(?: *[:@]? http)/i
-    ]
   },{
     query: "@doubleTwist",
     filters: []
@@ -88,11 +93,6 @@ module.exports = [
   },{
     query: "openspotify",
     filters: []
-  },{
-    query: "I\'m listening to",
-    filters: [
-      /(?:I'm listening to )(.*?[^"])(?: by "?)(.*?[^\s])(?: *http)/i
-    ]
   },{
     query: "Enjoy listening to",
     filters: []

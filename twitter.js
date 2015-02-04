@@ -20,7 +20,12 @@ exports.realtime = false;
 exports.count = 100;
 
 exports.getTweets = function(query, callback) {
-  getTweetsRecursive(query, 0, callback);
+  if (typeof query == 'string') {
+    query = [query];
+  }
+  query.forEach(function(q) {
+    getTweetsRecursive(q, 0, callback);
+  });
 };
 
 exports.getTweetsRealtime = function(query, callback) {
@@ -41,8 +46,7 @@ function getTweetsRecursive(query, maxId, callback) {
     q: query,
     count: exports.count,
     result_type: 'recent',
-    max_id: maxId,
-    location: [-180, -90, 180, 90] ///// THIS IS WROOOOOOOOONG
+    max_id: maxId
   }, function(err, data, response) {
     if (err) callback(true, err.message);
     else {
@@ -64,16 +68,10 @@ function getTweetsRecursive(query, maxId, callback) {
 }
 
 function processTweet(tweet, callback) {
-  var location;
-  if (!tweet.coordinates) {
-    // do something with the user
-  } else {
-    location = tweet.coordinates.coordinates;
-  }
   callback(false, {
     text: tweet.text,
     username: tweet.user.screen_name,
     avatar: tweet.user.profile_image_url,
-    location: location
+    raw: tweet
   });
 }
