@@ -15,6 +15,10 @@ exports.interval = 120;
 // This switch can be forced by changing this.
 exports.realtime = false;
 
+// How many tweets we get with each call to
+// the Twitter Search API
+exports.count = 100;
+
 exports.getTweets = function(query, callback) {
   getTweetsRecursive(query, 0, callback);
 };
@@ -26,7 +30,7 @@ exports.getTweetsRealtime = function(query, callback) {
     processTweet(tweet, callback);
   });
   stream.on('error', function(data) {
-    callback(true, 'Twitter API error: ' + data);
+    callback(true, 'Twitter API error: ' + data.message);
   });
 };
 
@@ -35,12 +39,12 @@ function getTweetsRecursive(query, maxId, callback) {
   console.log('Loading more tweets...'.gray);
   T.get('search/tweets', {
     q: query,
-    count: 100,
+    count: exports.count,
     result_type: 'recent',
     max_id: maxId,
     location: [-180, -90, 180, 90] ///// THIS IS WROOOOOOOOONG
   }, function(err, data, response) {
-    if (err) callback(true, err);
+    if (err) callback(true, err.message);
     else {
       data.statuses.forEach(function(tweet) {
         newId = Math.min(newId, tweet.id);
@@ -49,9 +53,10 @@ function getTweetsRecursive(query, maxId, callback) {
       if ((maxId === 0 || newId < maxId) && !exports.realtime) {
         setTimeout(function() {
           getTweetsRecursive(query, newId, callback);
-        }, exports.interval);
+        }, exports.interval * 1000);
       } else {
         console.log('Finished retrieving tweets. Connecting to realtime stream...'.gray);
+        exports.realtime = true;
         exports.getTweetsRealtime(query, callback);
       }
     }

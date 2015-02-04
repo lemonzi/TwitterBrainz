@@ -30,7 +30,7 @@ var parseSong = function(twit, filters) {
     res = filters[i].exec(twit);
     if (res) return [res[1],res[2]];
   }
-  console.log('Could not match twit: \n'.yellow, twit);
+  // console.log('Could not match twit: \n'.yellow, twit);
   return null;
 };
 
@@ -46,11 +46,12 @@ var runBackend = function(keyword) {
         recording: data[0],
         artist: data[1]
       }, function(err2, acoustic) {
-        if (err2) console.log(
-          acoustic.red, '\n',
-          twit.text, '\n',
-          '    ---> FILTER: '.magenta, data
-        );
+        // if (err2) console.log(
+        //   acoustic.red, '\n',
+        //   twit.text, '\n',
+        //   '    ---> FILTER: '.magenta, data
+        // );
+        if (err2) return;
         else console.log(
           'SONG FOUND:\n'.green,
           JSON.stringify(acoustic).green, '\n',
@@ -64,11 +65,14 @@ var runBackend = function(keyword) {
 
 // Start backend
 
-twitter.interval = 10;
-keywords.forEach(function(keyword) {
-  if (keyword.filters.length > 0)
-    runBackend(keyword);
+twitter.count = 30;
+twitter.realtime = true;
+var active_keywords = keywords.filter(function(k) {
+  return k.filters.length > 0;
 });
+// Automatically set this so we do not pass rate limit
+twitter.interval = active_keywords.length * 5;
+active_keywords.forEach(runBackend);
 
 // This is where the magic happens
 old_log = console.log;
