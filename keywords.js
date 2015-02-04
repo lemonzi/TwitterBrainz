@@ -87,11 +87,16 @@ module.exports = [
     filters: [
       /(?:Descubre )(.*)(?: de )(.*)(?: en)/i,
       /(?:Discover )(.*)(?: by )(.*)(?: on)/i,
-      /(?:Découvrez )(.*)(?: par )(.*)(?: sur)/i
+      /(?:Découvrez )(.*)(?: par )(.*)(?: sur)/i,
+      /(?:Se joga em )(.*)(?: de )(.*)(?: na)/i
     ]
   },{
     query: "SoundHound",
-    filters: []
+    filters: [
+      /(?:.*– )?(.*)(?: by )(.*)(?:, from)/i,
+      /(?:.*– )?(.*)(?: por parte de )(.*)(?:, de)/i,
+      /(?:.*– )?(.*)(?: di )(.*)(?:, da)/i
+    ]
   },{
     query: "Posted a new song:",
     filters: []
