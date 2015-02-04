@@ -19,13 +19,20 @@ exports.realtime = false;
 // the Twitter Search API
 exports.count = 100;
 
+exports.setRealtime = function(rt) {
+  exports.realtime = rt;
+  if (rt) exports.getTweetsRealtime(q, cb);
+};
+
+var q, cb;
 exports.getTweets = function(queries, callback) {
+  q = queries; cb = callback;
   if (typeof queries == 'string') {
     queries = [queries];
   }
   var getTweetsRecursive = function(query, maxId, callback) {
     if (exports.realtime) {
-      getTweetsRealtime(queries);
+      exports.getTweetsRealtime(queries);
       return;
     }
     var newId = maxId || Number.MAX_VALUE;

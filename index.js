@@ -18,7 +18,7 @@ app.get('/', function(req, res){
 
 io.sockets.on('connection', function (socket) {
   socket.on('realtime', function(realtime) {
-    twitter.realtime = !! realtime;
+    twitter.setRealtime(!! realtime);
   });
   socket.on('flush', function() {
     brainz.queue.length = 0;
