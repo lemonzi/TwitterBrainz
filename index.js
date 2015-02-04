@@ -17,7 +17,12 @@ app.get('/', function(req, res){
 });
 
 io.sockets.on('connection', function (socket) {
-  // Say hi
+  socket.on('realtime', function(realtime) {
+    twitter.realtime = !! realtime;
+  });
+  socket.on('flush', function() {
+    brainz.queue.length = 0;
+  });
 });
 
 server.listen(process.env.PORT || 8080);
@@ -36,7 +41,7 @@ var parseSong = function(twit, keywords) {
       if (res) return [res[1],res[2]];
     }
   }
-  // console.log('Could not match twit: \n'.yellow, twit);
+  console.log('Could not match twit: \n'.yellow, twit);
   return null;
 };
 
@@ -59,12 +64,15 @@ var runBackend = function(keywords) {
           '    ---> FILTER: '.magenta, JSON.stringify(data).yellow
         );
         // if (err2) return;
-        else console.log(
-          'SONG FOUND:\n'.green,
-          JSON.stringify(acoustic).green, '\n',
-          twit.text, '\n',
-          '    ---> FILTER: '.magenta, JSON.stringify(data).yellow
-        );
+        else {
+          console.log(
+            'SONG FOUND:\n'.green,
+            JSON.stringify(acoustic).green, '\n',
+            twit.text, '\n',
+            '    ---> FILTER: '.magenta, JSON.stringify(data).yellow
+          );
+          io.sockets.emit('tweet', twit, acoustic);
+        }
       });
     }
   });

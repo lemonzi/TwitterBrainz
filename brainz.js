@@ -3,8 +3,7 @@ var NB = require('nodebrainz'),
 
 // THIS IS FOR MUSICBRAINZ (already glued to acousticbrainz)
 
-var queue = [];
-var cache = {};
+exports.queue = [];
 
 var nb = new NB({});
 setInterval(function() {
