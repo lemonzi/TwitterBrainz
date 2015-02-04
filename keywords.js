@@ -98,6 +98,11 @@ module.exports = [
       /(?:.*– )?(.*)(?: di )(.*)(?:, da)/i
     ]
   },{
+    query: "Tinysong",
+    filters: [
+      /(?:Listen to )(.*)(?: singing ")(.*)(?:" he)/i
+    ]
+  },{
     query: "Posted a new song:",
     filters: []
   },{
