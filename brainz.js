@@ -3,8 +3,6 @@ var NB = require('nodebrainz'),
 
 // THIS IS FOR MUSICBRAINZ (already glued to acousticbrainz)
 
-exports.interval = 1;
-
 var queue = exports.queue = [];
 
 var nb = new NB({});
@@ -46,7 +44,7 @@ setInterval(function() {
     };
     exports.acousticBrainz(songs[0].id, abCallback);
   });
-}, exports.interval * 1000);
+}, 3000);
 
 exports.query = function(query, mbCallback) {
   if (queue.length < 100000) queue.push({
