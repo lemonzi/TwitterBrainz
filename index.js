@@ -41,7 +41,7 @@ var parseSong = function(twit, keywords) {
       if (res) return [res[1],res[2]];
     }
   }
-  console.log('Could not match twit: \n'.yellow, twit);
+  // console.log('Could not match twit: \n'.yellow, twit);
   return null;
 };
 
