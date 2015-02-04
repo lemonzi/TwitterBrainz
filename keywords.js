@@ -25,6 +25,7 @@ module.exports = [
   },{
     query: "#Now Playing",
     filters: [
+      /(?:#Now Playing )((?:\S-\S|[^-])*)(?:\s+-)?(?:\s+-\s+)([\w\s-'!àèìòùáéíóúäëïöü.]*\w)(?: on WIAG.*)(?:http\S*)/i,
       /(?:#Now Playing )((?:\S-\S|[^-])*)(?:\s+-)?(?:\s+-\s+)([\w\s-'!àèìòùáéíóúäëïöü.]*\w)(?:.*\s+.*http\S*)/i,
       /(?:#Now Playing )((?:\S-\S|[^-])*)(?:\s+-)?(?:\s+-\s+)([\w\s]*\w)(?:.*\s+.*http\S*)/i
     ]
@@ -82,8 +83,12 @@ module.exports = [
     query: "PlayerPro@Android",
     filters: []
   },{
-    query: "Deezer",
-    filters: []
+    query: "#Deezer",
+    filters: [
+      /(?:Descubre )(.*)(?: de )(.*)(?: en)/i,
+      /(?:Discover )(.*)(?: by )(.*)(?: on)/i,
+      /(?:Découvrez )(.*)(?: par )(.*)(?: sur)/i
+    ]
   },{
     query: "SoundHound",
     filters: []

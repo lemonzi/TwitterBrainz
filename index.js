@@ -54,11 +54,19 @@ var runBackend = function(keywords) {
         artist: data[1]
       }, function(err2, acoustic) {
         if (err2) console.log(
+<<<<<<< HEAD
           acoustic.red, '\n',
           twit.text, '\n',
           '    ---> FILTER: '.magenta, JSON.stringify(data).yellow
         );
         // if (err2) return;
+=======
+           acoustic.red, '\n',
+           twit.text, '\n',
+           '    ---> FILTER: '.magenta, data
+        );
+        //if (err2) return;
+>>>>>>> Filters
         else console.log(
           'SONG FOUND:\n'.green,
           JSON.stringify(acoustic).green, '\n',
@@ -72,14 +80,20 @@ var runBackend = function(keywords) {
 
 // Start backend
 
+<<<<<<< HEAD
 twitter.realtime = false;
 twitter.count = 30;
 
+=======
+twitter.count = 20;
+// twitter.realtime = true;
+>>>>>>> Filters
 var active_keywords = keywords.filter(function(k) {
   return k.filters.length > 0;
 });
 twitter.interval = active_keywords.length * 5;
 runBackend(active_keywords);
+
 
 // This is where the magic happens
 old_log = console.log;
