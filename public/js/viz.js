@@ -85,8 +85,9 @@ d3.csv('data/summary.csv', function(data) {
     "Health spending" : "Government health spending (% of government spend)"
   };
 
+  data = parseData(data);
+
   var keys = _.keys(data[0]);
-  var data = parseData(data);
   var bounds = getBounds(data, 1);
 
   // SVG AND D3 STUFF
@@ -199,9 +200,8 @@ d3.csv('data/summary.csv', function(data) {
     .attr('transform', 'translate(-10, 0)')
     .call(makeYAxis);
 
-
-
   //// RENDERING FUNCTIONS
+
   function updateChart(init) {
     updateScales();
 
@@ -284,4 +284,4 @@ d3.csv('data/summary.csv', function(data) {
     });
   }
 
-})
+});
