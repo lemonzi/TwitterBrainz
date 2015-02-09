@@ -8,7 +8,7 @@ var queue = exports.queue = [];
 var nb = new NB({});
 setInterval(function() {
   if (queue.length === 0) return;
-  var task = queue.pop();
+  var task = queue.splice(Math.floor(Math.random() * queue.length), 1)[0];
   var query = task.query;
   var mbCallback = task.callback;
   nb.search('recording', query, function(err,resp){

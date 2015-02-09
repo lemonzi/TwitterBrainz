@@ -30,7 +30,7 @@ server.listen(process.env.PORT || 8080);
 // Main functions
 
 var parseSong = function(twit, keywords) {
-  if (twit.toLowerCase().indexOf("mariahcarey") >= 0) return null;
+  // if (twit.toLowerCase().indexOf("mariahcarey") >= 0) return null;
   for (var j = 0; j < keywords.length; j++) {
     var k = keywords[j];
     if (twit.toLowerCase().indexOf(k.query.toLowerCase()) < 0)

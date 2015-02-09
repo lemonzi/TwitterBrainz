@@ -6,7 +6,7 @@ function parseData(d) {
   return _.map(d, function(d) {
     var o = {};
     _.each(keys, function(k) {
-      if( k == 'Country' )
+      if( k == 'tweet' )
         o[k] = d[k];
       else
         o[k] = parseFloat(d[k]);
@@ -69,20 +69,16 @@ function getCorrelation(xArray, yArray) {
 
 d3.csv('data/summary.csv', function(data) {
 
-  var xAxis = 'GDP', yAxis = 'Well-being';
-  var xAxisOptions = ["GDP", "Equality", "Food consumption", "Alcohol consumption", "Energy consumption", "Family", "Working hours", "Work income", "Health spending", "Military spending"]
-  // var yAxisOptions = ["Well-being"];
+  var xAxis = 'Hour', yAxis = 'Tempo';
+  var xAxisOptions = ["Hour", "Weekday", "Month"];
+  var yAxisOptions = ["Tempo", "Tonality"];
   var descriptions = {
-    "GDP" : "GDP per person (US$)",
-    "Energy consumption" : "Residential electricity use (kWh per year per person)",
-    "Equality" : "Equality (based on GINI index) (0 = low equality, 100 = high equality)",
-    "Work income" : "Hourly pay per person (US$)",
-    "Food consumption": "Food supply (kCal per day per person)",
-    "Family" : "Fertility (children per women)",
-    "Alcohol consumption" : "Alcohol consumption (litres of pure alchohol per year per person)",
-    "Working hours" : "Average working hours per week per person",
-    "Military spending" : "Military spending (% of GDP)",
-    "Health spending" : "Government health spending (% of government spend)"
+    "Hour": "Hour of the day",
+    "Weekday": "Day of the week",
+    "Month": "Month of the year",
+    "Tempo": "Average tempo, in BPM",
+    "Tonality": "Tonality (C,D,E,F,G,A,B,Eb,C#,...)",
+    "Mode": "Minor or major"
   };
 
   data = parseData(data);
@@ -117,20 +113,20 @@ d3.csv('data/summary.csv', function(data) {
       updateMenus();
     });
 
-  // d3.select('#y-axis-menu')
-  //   .selectAll('li')
-  //   .data(yAxisOptions)
-  //   .enter()
-  //   .append('li')
-  //   .text(function(d) {return d;})
-  //   .classed('selected', function(d) {
-  //     return d === yAxis;
-  //   })
-  //   .on('click', function(d) {
-  //     yAxis = d;
-  //     updateChart();
-  //     updateMenus();
-  //   });
+  d3.select('#y-axis-menu')
+    .selectAll('li')
+    .data(yAxisOptions)
+    .enter()
+    .append('li')
+    .text(function(d) {return d;})
+    .classed('selected', function(d) {
+      return d === yAxis;
+    })
+    .on('click', function(d) {
+      yAxis = d;
+      updateChart();
+      updateMenus();
+    });
 
   // Country name
   d3.select('svg g.chart')
@@ -153,7 +149,7 @@ d3.csv('data/summary.csv', function(data) {
     .append('text')
     .attr('transform', 'translate(-60, 330)rotate(-90)')
     .attr({'id': 'yLabel', 'text-anchor': 'middle'})
-    .text('Well-being (scale of 0-10)');
+    .text(descriptions[yAxis]);
 
   // Render points
   updateScales();
@@ -169,7 +165,7 @@ d3.csv('data/summary.csv', function(data) {
     .attr('cy', function(d) {
       return isNaN(d[yAxis]) ? d3.select(this).attr('cy') : yScale(d[yAxis]);
     })
-    .attr('fill', function(d, i) {return pointColour(i);})
+    .attr('fill', function(d, i) {return pointColour(d['Mode'] == 'major' ? 0 : 1);})
     .style('cursor', 'pointer')
     .on('mouseover', function(d) {
       d3.select('svg g.chart #countryLabel')
