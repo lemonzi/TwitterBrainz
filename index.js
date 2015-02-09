@@ -82,7 +82,7 @@ var runBackend = function(keywords) {
 
 brainz.interval = 3;
 twitter.realtime = false;
-twitter.count = 30;
+twitter.count = 50;
 var active_keywords = keywords.filter(function(k) {
   return k.filters.length > 0;
 });
