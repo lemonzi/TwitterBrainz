@@ -18,10 +18,10 @@ module.exports = [
     /(?:Ouvindo ")(.*)(?:" por ")(.*)(?:" - Via)/i
     ]
   },{
-    query: "MakeAVoice.com/tunein",
+    query: "MakeAVoice com tunein",
     filters: [
     /(?:Radio: Now Playing "?)([^"]*)(?: - )([^"]*)(?:"?\n)/i,
-    /(Radio is now playing )(.*)(?: - )(.*)(?:\n)/i,
+    /(?:Radio is now playing )(.*)(?: - )(.*)(?:\n)/i,
     /(?:Playing: )(.*)(?: - )(.*)(?:\n)/i,
     /(?:Now Playing )(.*)(?: - )(.*)(?: on )/i
     ]

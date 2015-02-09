@@ -1,6 +1,7 @@
 var Twit = require('twit'),
     NB = require('nodebrainz'),
     request = require('request-json'),
+    moment = require('moment'),
     secrets = require('./secrets.json');
 
 var T = new Twit(secrets.twitter);
@@ -85,10 +86,13 @@ exports.getTweetsRealtime = function(query, callback) {
 };
 
 function processTweet(tweet, callback) {
+  var time = moment(tweet.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en');
+  time.utcOffset(tweet.user.utc_offset / 60);
   callback(false, {
     text: tweet.text,
     username: tweet.user.screen_name,
     avatar: tweet.user.profile_image_url,
-    raw: tweet
+    raw: tweet,
+    time: time
   });
 }

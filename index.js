@@ -38,7 +38,7 @@ var parseSong = function(twit, keywords) {
     var res = null;
     for (var i = 0; i < k.filters.length; i++) {
       res = k.filters[i].exec(twit);
-      if (res) return [res[1],res[2]];
+      if (res) return [res.capture('song'),res.capture('artist')];
     }
   }
   // console.log('Could not match twit: \n'.yellow, twit);
@@ -61,6 +61,7 @@ var runBackend = function(keywords) {
         if (err2) console.log(
           acoustic.red, '\n',
           twit.text, '\n',
+          twit.time.format().red, '\n',
           '    ---> FILTER: '.magenta, JSON.stringify(data).yellow
         );
         // if (err2) return;
