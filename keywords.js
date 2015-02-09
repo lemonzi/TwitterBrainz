@@ -69,7 +69,8 @@ module.exports = [
   },{
     query: "#SoundCloud",
     filters: [
-      /(?:Listen to |A new favorite: )(.*?)(?: by )([^#]*\S)(?: #np on #SoundCloud| http| on #SoundCloud| via #SoundCloud)/i
+      /(?:Listen to |A new favorite: )(.*?)(?: by )([^#]*\S)(?: #np on #SoundCloud| http.* on #SoundCloud| via #SoundCloud)/i,
+      /(?:Listen to |A new favorite: )(.*?)(?: by )([^#]*\S)(?: on #SoundCloud| http)/i
     ]
   },{
     query: "itunes apple com album",
