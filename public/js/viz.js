@@ -227,7 +227,7 @@ function init() {
             return x == d ? 'black' : 'none';
           })
         d3.select('#player-frame')
-          .attr('src', 'http://toma.hk/embed.php?artist='+encodeURIComponent(d.Artist)+'&title='+encodeURIComponent(d.Song)+'&autoplay=true')
+          .attr('src', 'https://toma.hk/embed.php?artist='+encodeURIComponent(d.Artist)+'&title='+encodeURIComponent(d.Song)+'&autoplay=true')
       })
 
     // Exit removed elements
