@@ -22,7 +22,7 @@ exports.count = 100;
 
 exports.setRealtime = function(rt) {
   exports.realtime = rt;
-  if (rt) exports.getTweetsRealtime(q, cb);
+  if (rt && cb) exports.getTweetsRealtime(q, cb);
 };
 
 var q, cb;
@@ -33,7 +33,7 @@ exports.getTweets = function(queries, callback) {
   }
   var getTweetsRecursive = function(query, maxId, callback) {
     if (exports.realtime) {
-      exports.getTweetsRealtime(queries);
+      exports.getTweetsRealtime(queries, callback);
       return;
     }
     var newId = maxId || Number.MAX_VALUE;
@@ -41,7 +41,8 @@ exports.getTweets = function(queries, callback) {
     T.get('search/tweets', {
       q: query,
       count: exports.count,
-      result_type: 'recent',
+      // result_type: 'recent',
+      result_type: 'mixed',
       max_id: maxId
     }, function(err, data, response) {
       if (err) callback(true, err.message);
@@ -69,8 +70,9 @@ exports.getTweets = function(queries, callback) {
 var connected = false;
 exports.getTweetsRealtime = function(query, callback) {
   if (connected) return;
+  q = query; cb = callback;
   connected = true;
-  var stream = T.stream('statuses/filter', {track:query});
+  var stream = T.stream('statuses/filter', {track:query.join(",")});
   // When a Tweet is recieved:
   stream.on('tweet', function(tweet) {
     if (!exports.realtime) {
@@ -86,13 +88,13 @@ exports.getTweetsRealtime = function(query, callback) {
 };
 
 function processTweet(tweet, callback) {
-  var time = moment(tweet.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en');
+  var time = moment(tweet.created_at, 'ddd MMM DD HH:mm:ss ZZZZZ YYYY', 'en').utc();
   time.utcOffset(tweet.user.utc_offset / 60);
   callback(false, {
     text: tweet.text,
     username: tweet.user.screen_name,
     avatar: tweet.user.profile_image_url,
-    raw: tweet,
+    // raw: tweet,
     time: time
   });
 }

@@ -32,7 +32,7 @@ body {
 
 #about {
   position: absolute;
-  top: 300px;
+  top: 200px;
   left: 30px;
   width: 200px;
   font-size: 12px;
@@ -40,6 +40,14 @@ body {
 
 #about .social {
   margin-top: 5px;
+}
+
+#player {
+  position: absolute;
+  top: 420px;
+  left: 30px;
+  width: 200px;
+  height: 200px;
 }
 
 #menu {

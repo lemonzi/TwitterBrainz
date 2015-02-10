@@ -38,7 +38,7 @@ setInterval(function() {
         mbCallback(false, {
           title: title,
           artist: artist,
-          tonality: resp
+          features: resp
         });
       }
     };

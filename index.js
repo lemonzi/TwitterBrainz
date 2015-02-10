@@ -11,6 +11,8 @@ var express = require('express'),
 
 // Init webserver
 
+var history = [];
+
 app.use(express.static(__dirname + '/public'));
 app.get('/', function(req, res){
   res.sendFile(__dirname+'/index.html');
@@ -22,6 +24,11 @@ io.sockets.on('connection', function (socket) {
   });
   socket.on('flush', function() {
     brainz.queue.length = 0;
+  });
+  history.forEach(function(t,i) {
+    setTimeout(function() {
+      socket.emit('tweet', t[0], t[1]);
+    }, i*300);
   });
 });
 
@@ -61,7 +68,7 @@ var runBackend = function(keywords) {
         if (err2) console.log(
           acoustic.red, '\n',
           twit.text, '\n',
-          twit.time.format().red, '\n',
+          twit.time.format('HH:mm').red, '\n',
           '    ---> FILTER: '.magenta, JSON.stringify(data).yellow
         );
         // if (err2) return;
@@ -70,9 +77,17 @@ var runBackend = function(keywords) {
             'SONG FOUND:\n'.green,
             JSON.stringify(acoustic).green, '\n',
             twit.text, '\n',
+            twit.time.format('HH:mm').green, '\n',
             '    ---> FILTER: '.magenta, JSON.stringify(data).yellow
           );
+          twit.date = {
+            hour: twit.time.hour() + twit.time.minute() / 60,
+            day: twit.time.format('ddd'),
+            month: twit.time.format('MMM')
+          };
           io.sockets.emit('tweet', twit, acoustic);
+          history.push([twit, acoustic]);
+          if (history.length > 100) history.shift();
         }
       });
     }
@@ -81,9 +96,9 @@ var runBackend = function(keywords) {
 
 // Start backend
 
-brainz.interval = 3;
-twitter.realtime = false;
-twitter.count = 50;
+brainz.interval = 2;
+twitter.realtime = true;
+twitter.count = 100;
 var active_keywords = keywords.filter(function(k) {
   return k.filters.length > 0;
 });

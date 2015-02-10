@@ -61,12 +61,14 @@ module.exports = [
       named(/(?:Descubre )(:<song>.*)(?: de )(:<artist>.*)(?: en| &amp)/i),
       named(/(?:Discover )(:<song>.*)(?: by )(:<artist>.*)(?: on)/i),
       named(/(?:Découvrez )(:<song>.*)(?: par )(:<artist>.*)(?: sur| - Deezer)/i),
-      named(/(?:Se joga em )(:<song>.*)(?: de )(:<artist>.*)(?: na)/i)
+      named(/(?:Se joga em )(:<song>.*)(?: de )(:<artist>.*)(?: na)/i),
+      named(/(?:Escuchando )(:<song>.*)(?: de )(:<artist>.*)(?: en)/i)
     ]
   },{
     query: "I'm listening to",
     filters: [
-      named(/(?:listening to )(:<song>.*)(?: by )(:<artist>[^#]*\S)(?: on @Grooveshark)/i)
+      named(/(?:listening to )(:<song>.*)(?: by )(:<artist>[^#]*\S)(?: on @Grooveshark)/i),
+      named(/(?:listening to ["']?)(:<song>[^"']*)(?:["']? by )(:<artist>[^#]*\S)(?: on #?Pandora)/i)
     ]
   },{
     query: "itunes apple com album",

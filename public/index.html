@@ -5,10 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>TwitterBrainz</title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width; height=device-height">
+    <!-- <meta name="viewport" content="width=device-width, height=device-height"> -->
     <!-- <link rel="stylesheet" type="text/css" href="css/style.css"> -->
     <link rel="stylesheet" type="text/css" href="css/viz.css">
-    <link href="./jcubic/css/jquery.terminal.css" rel="stylesheet"/>
+    <!--<link href="./jcubic/css/jquery.terminal.css" rel="stylesheet"/>-->
   </head>
   <body>
     <div id="wrapper" class="wrapper">
@@ -29,11 +29,15 @@
 
       <div id="about">
         <!-- <h4>About</h4> -->
-        <p><strong>This is an explanation of TwitterBrainz</strong></p>
-        <p>Blabla, blabla, blabla.</p>
-        <p>Blabla, code <a href="https://github.com/lemonzi/TwitterBrainz" target="_blank">Code</a></p>
-        <p>Blabla, heaviliy inspired {{happiness}}</p>
-        <p>Built by Àngel Farguell and <a href="http://lemonzi.me">Quim Llimona</a>.</p>
+        <p><strong>Visualizing music on Twitter</strong></p>
+        <p>Explore musical features of what people post in Twitter they are listening to in real-time, grouped by time. </p>
+        <p> Built using MusicBrainz, Twitter, AcousticBrainz, Tomahawk, node.js, and d3.js.</p>
+        <p>Code available on <a href="https://github.com/lemonzi/TwitterBrainz" target="_blank">GitHub</a>.</p>
+        <p>Built by Àngel Farguell <br>and <a href="http://lemonzi.me">Quim Llimona</a>.</p>
+      </div>
+
+      <div id="player">
+        <iframe id="player-frame" src="" width="200" scrolling="no" height="200" frameborder="0" allowtransparency="true" ></iframe>
       </div>
 
     </div> <!-- wrapper -->
