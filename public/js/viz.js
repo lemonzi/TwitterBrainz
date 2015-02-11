@@ -189,7 +189,8 @@ function VIZ() {
         .attr('src', 'http://toma.hk/embed.php?'+
                      'artist='+encodeURIComponent(d.Artist)+
                      '&title='+encodeURIComponent(d.Song)+
-                     '&autoplay=true')
+                     '&autoplay=true'+
+                     '&disabledResolvers=Soundcloud')
     })
 
     // Exit removed elements
