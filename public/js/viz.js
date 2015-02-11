@@ -8,13 +8,11 @@ function VIZ() {
   var xAxisOptions = ["Hour", "Weekday", "Month"];
   var yAxisOptions = ["Tempo", "Tonality"];
   var descriptions = {
-    "Hour": "Hour of the day",
+    "Hour": "Hour of the day (user-localized or UTC)",
     "Weekday": "Day of the week",
     "Month": "Month of the year",
     "Tempo": "Average tempo, in BPM",
-    "Tonality": "Tonality of the song (main key)",
-    "Mode": "Minor or major",
-    "Tweet": "Tweet contents"
+    "Tonality": "Tonality of the song"
   };
 
   var bounds;
@@ -32,7 +30,7 @@ function VIZ() {
 
   svg.append('g')
     .classed('chart', true)
-    .attr('transform', 'translate(80, -60)');
+    .attr('transform', 'translate(80, -50)');
 
   // Build menus
   d3.select('#x-axis-menu')
@@ -63,37 +61,45 @@ function VIZ() {
 
   updateMenus();
 
-  d3.select('svg g.chart')
-    .append('text')
+  svg.append('g').classed('legend',true)
+     .attr('transform', 'translate(20, 10)');
+
+  d3.select('svg g.legend').append('circle').attr({
+    'cx': 0, 'cy': 20, 'r': 7, 'fill': pointColour(1)
+  });
+  d3.select('svg g.legend').append('text').text('Major key').attr({
+    'x': 10, 'y': 24
+  });
+  d3.select('svg g.legend').append('circle').attr({
+    'cx': 0, 'cy': 0, 'r': 7, 'fill': pointColour(2)
+  });
+  d3.select('svg g.legend').append('text').text('Minor key').attr({
+    'x': 10, 'y': 4
+  });
+
+  d3.select('svg g.chart').append('text')
     .attr({'id': 'countryLabel', 'x': 0, 'y': 170, 'dy': "1.5em"})
     .style({'font-size': '40px', 'font-weight': 'light', 'fill': '#ddd'});
 
-  d3.select('svg g.chart')
-    .append('text')
+  d3.select('svg g.chart').append('text')
     .attr({'id': 'twitterUser', 'x': 0, 'y': 170, 'dy': 0})
     .style({'font-size': '80px', 'font-weight': 'bold', 'fill': '#ddd'});
 
   // Axis labels
-  d3.select('svg g.chart')
-    .append('text')
+  d3.select('svg g.chart').append('text')
     .attr({'id': 'xLabel', 'x': 400, 'y': 670, 'text-anchor': 'middle'})
     .text(descriptions[xAxis]);
 
-  d3.select('svg g.chart')
-    .append('text')
+  d3.select('svg g.chart').append('text')
     .attr('transform', 'translate(-60, 330)rotate(-90)')
     .attr({'id': 'yLabel', 'text-anchor': 'middle'})
     .text(descriptions[yAxis]);
 
   // Render axes
-  d3.select('svg g.chart')
-    .append("g")
-    .attr('transform', 'translate(0, 630)')
-    .attr('id', 'xAxis');
+  d3.select('svg g.chart').append("g").attr('id', 'xAxis')
+    .attr('transform', 'translate(0, 630)');
 
-  d3.select('svg g.chart')
-    .append("g")
-    .attr('id', 'yAxis')
+  d3.select('svg g.chart').append("g").attr('id', 'yAxis')
     .attr('transform', 'translate(-10, 0)');
 
   //// RENDERING FUNCTIONS

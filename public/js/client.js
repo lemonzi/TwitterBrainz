@@ -3,6 +3,7 @@ var socket = io();
 jQuery(document).ready(function($) {
 
     var v = new VIZ();
+    var preload = true;
 
     $('#terminal').terminal(function(command) {}, {
         enabled: false,
@@ -16,9 +17,12 @@ jQuery(document).ready(function($) {
     });
 
     socket.on('tweet', function(twit, acoustics, prepop) {
+        if (prepop) {
+            if (!preload) return;
+            $("#terminal").terminal().echo("Pre-populating...");
+        }
         console.log(twit);
         console.log(acoustics);
-        if (prepop) $("#terminal").terminal().echo("Pre-populating...");
         var point = {
             "Tweet": twit.text,
             "User": "@" + twit.username,
@@ -46,7 +50,10 @@ jQuery(document).ready(function($) {
     });
     $('#console-yes').click(function()  { updateConsole(true);   });
     $('#console-no').click(function()   { updateConsole(false);  });
-    $('#clear').click(v.clear);
+    $('#clear').click(function() {
+        v.clear();
+        preload = false;
+    });
 
     function updateRealtime(rt) {
         if (rt) {

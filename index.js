@@ -30,7 +30,7 @@ io.sockets.on('connection', function (socket) {
   history.forEach(function(t,i) {
     setTimeout(function() {
       socket.emit('tweet', t[0], t[1], true);
-    }, i*300);
+    }, i*200);
   });
   socket.emit('realtime', twitter.realtime);
 });
