@@ -56,7 +56,6 @@ exports.getTweets = function(queries, callback) {
             getTweetsRecursive(query, newId, callback);
           }, exports.interval * 1000);
         } else {
-          console.log('Finished retrieving tweets. Connecting to realtime stream...'.gray);
           exports.realtime = true;
         }
       }
@@ -70,6 +69,7 @@ exports.getTweets = function(queries, callback) {
 var connected = false;
 exports.getTweetsRealtime = function(query, callback) {
   if (connected) return;
+  console.log('Finished retrieving tweets. Connecting to realtime stream...'.gray);
   q = query; cb = callback;
   connected = true;
   var stream = T.stream('statuses/filter', {track:query.join(",")});

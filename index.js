@@ -21,15 +21,18 @@ app.get('/', function(req, res){
 io.sockets.on('connection', function (socket) {
   socket.on('realtime', function(realtime) {
     twitter.setRealtime(!! realtime);
+    io.sockets.emit('realtime', realtime);
+    brainz.queue.length = 0;
   });
   socket.on('flush', function() {
     brainz.queue.length = 0;
   });
   history.forEach(function(t,i) {
     setTimeout(function() {
-      socket.emit('tweet', t[0], t[1]);
+      socket.emit('tweet', t[0], t[1], true);
     }, i*300);
   });
+  socket.emit('realtime', twitter.realtime);
 });
 
 server.listen(process.env.PORT || 8080);
@@ -87,24 +90,23 @@ var runBackend = function(keywords) {
           };
           io.sockets.emit('tweet', twit, acoustic);
           history.push([twit, acoustic]);
-          if (history.length > 100) history.shift();
+          if (history.length > 1000) history.shift();
         }
       });
-    }
+     }
   });
 };
 
 // Start backend
 
-brainz.interval = 2;
-twitter.realtime = true;
+brainz.interval = 1.5;
+twitter.realtime = false;
 twitter.count = 100;
 var active_keywords = keywords.filter(function(k) {
   return k.filters.length > 0;
 });
 twitter.interval = active_keywords.length * 15;
 runBackend(active_keywords);
-
 
 // This is where the magic happens
 old_log = console.log;

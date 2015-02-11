@@ -18,6 +18,7 @@ body {
   top: 30px;
   left: 250px;
   width: 900px;
+  height: 640px;
   /*margin: 25px auto;*/
 }
 
@@ -32,19 +33,24 @@ body {
 
 #about {
   position: absolute;
-  top: 200px;
+  top: 210px;
   left: 30px;
   width: 200px;
   font-size: 12px;
+  line-height: 1.3em;
+}
+
+#about p {
+  margin-bottom: -5px;
 }
 
 #about .social {
   margin-top: 5px;
 }
 
-#player {
+#player-frame {
   position: absolute;
-  top: 420px;
+  top: 440px;
   left: 30px;
   width: 200px;
   height: 200px;
@@ -55,10 +61,16 @@ body {
   top: 65px;
   left: 30px;
   width: 300px;
+  font-size: 12px;
 }
 
 .hidden {
   visibility: hidden;
+}
+
+.left {
+  float: left;
+  margin-right: 30px;
 }
 
 li, h1, h2 {
@@ -75,30 +87,31 @@ ul {
   list-style: none;
   font-size: 12px;
   padding: 0;
-  margin-top: 3px;
+  margin-top: 5px;
 }
 
 li {
-  cursor: pointer;
   padding-bottom: 5px;
 }
 
-li:hover {
+.item {
+  cursor: pointer;
+}
+
+.item:hover {
   color: #000;
 }
 
-li.preview {
+.item.preview {
   font-weight: 400;
 }
 
-li.selected {
+.item.selected {
   font-weight: bold;
 }
 
 /* TERMINAL */
 
-#terminal
-{
-  border:4px solid #336777;
-  min-height:500px;
+#terminal {
+  border:4px solid #306070;
 }

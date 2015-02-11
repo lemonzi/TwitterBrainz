@@ -8,7 +8,8 @@
     <!-- <meta name="viewport" content="width=device-width, height=device-height"> -->
     <!-- <link rel="stylesheet" type="text/css" href="css/style.css"> -->
     <link rel="stylesheet" type="text/css" href="css/viz.css">
-    <!--<link href="./jcubic/css/jquery.terminal.css" rel="stylesheet"/>-->
+    <link rel="stylesheet" type="text/css" href="css/svg.css">
+    <link href="./jcubic/css/jquery.terminal.css" rel="stylesheet"/>
   </head>
   <body>
     <div id="wrapper" class="wrapper">
@@ -21,10 +22,19 @@
       </div>
 
       <div id="menu">
-        <h2>&uarr; Y axis</h2>
-        <ul id="y-axis-menu"></ul>
-        <h2>&rarr; X axis</h2>
-        <ul id="x-axis-menu"></ul>
+        <div class="left">
+          <h2>&rarr; X axis</h2>
+          <ul id="x-axis-menu"></ul>
+          <ul id="switches">
+            <li>Realtime: <span id="realtime-yes" class="item selected">Yes</span> | <span id="realtime-no" class="item">No</span></li>
+            <li>Console: <span id="console-yes" class="item">Show</span> | <span id="console-no" class="selected item">Hide</span></li>
+            <li id="clear" class="item">Clear</li>
+          </ul>
+        </div>
+        <div>
+          <h2>&uarr; Y axis</h2>
+          <ul id="y-axis-menu"></ul>
+        </div>
       </div>
 
       <div id="about">
@@ -36,9 +46,7 @@
         <p>Built by Àngel Farguell <br>and <a href="http://lemonzi.me">Quim Llimona</a>.</p>
       </div>
 
-      <div id="player">
-        <iframe id="player-frame" src="" width="200" scrolling="no" height="200" frameborder="0" allowtransparency="true" ></iframe>
-      </div>
+      <iframe id="player-frame" src="" width="200" scrolling="no" height="200" frameborder="0" allowtransparency="true" ></iframe>
 
     </div> <!-- wrapper -->
 
