@@ -74,16 +74,29 @@ exports.query = function(query, mbCallback, queue) {
 
 var acousticBrainzClient = request.newClient('http://acousticbrainz.org/');
 exports.acousticBrainz = function(id, callback) {
+  var flush = false;
+  var output = {};
   acousticBrainzClient.get(id+'/high-level', function(err, res, body) {
-    if (res.statusCode == 404) {
-      callback(true, 'No acoustic features found');
+    if (err || res.statusCode == 404) {
+      if (!flush) callback(true, 'No acoustic features found');
     } else {
-      callback(false, {
-        valence: body.highlevel.mood_happy.all.happy,
-        arousal: body.highlevel.mood_relaxed.all.not_relaxed,
-        vocal: body.highlevel.voice_instrumental.value
-      });
+      output.valence = body.highlevel.mood_happy.all.happy;
+      output.arousal = body.highlevel.mood_relaxed.all.not_relaxed;
+      output.vocal = body.highlevel.voice_instrumental.value;
+      if (flush) callback(false, output);
     }
+    flush = true;
+  });
+  acousticBrainzClient.get(id+'/low-level', function(err, res, body) {
+    if (err || res.statusCode == 404) {
+      if (!flush) callback(true, 'No acoustic features found');
+    } else {
+      output.key = body.tonal.chords_key;
+      output.tempo = body.rhythm.bpm;
+      output.scale = body.tonal.chords_scale;
+      if (flush) callback(false, output);
+    }
+    flush = true;
   });
 };
 

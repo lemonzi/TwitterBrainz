@@ -33,6 +33,9 @@ jQuery(document).ready(function($) {
             "Positiveness": acoustics.features.valence,
             "Energy": acoustics.features.arousal,
             "Vocal": acoustics.features.vocal,
+            "Tonality": acoustics.features.key,
+            "Tempo": acoustics.features.tempo,
+            "Mode": acoustics.features.scale,
             "Artist": acoustics.artist,
             "Song": acoustics.title,
             "Avatar": twit.avatar

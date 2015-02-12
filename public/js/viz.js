@@ -5,12 +5,12 @@ function VIZ() {
   // VARIABLES
 
   var xAxis = 'Positiveness', yAxis = 'Energy';
-  var xAxisOptions = ["Positiveness"];
-  var yAxisOptions = ["Energy"];
+  var xAxisOptions = ["Positiveness", "Hour", "Weekday", "Month"];
+  var yAxisOptions = ["Energy", "Tonality", "Tempo"];
   var descriptions = {
-    "Hour": "Hour of the day (user-localized or UTC)",
-    "Weekday": "Day of the week",
-    "Month": "Month of the year",
+    "Hour": "Hour when the tweet was published (user-localized or UTC)",
+    "Weekday": "Day of the week the tweet was published",
+    "Month": "Month of the year the tweet was published",
     "Tempo": "Average tempo, in BPM",
     "Tonality": "Tonality of the song",
     "Positiveness": "Feeling of the song: left is negative, right is positive",

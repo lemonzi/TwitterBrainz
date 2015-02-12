@@ -57,7 +57,7 @@ var parseSong = function(twit, keywords) {
 
 var runBackend = function(keywords) {
   var queries = keywords.map(function(k) {return k.query;});
-  var callback = function(err,twit, room) {
+  var callback = function(err, twit, room) {
     if (err) {
       console.log(twit.red);
       return;
