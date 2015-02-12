@@ -19,20 +19,20 @@ app.get('/', function(req, res){
 });
 
 io.sockets.on('connection', function (socket) {
-  socket.on('realtime', function(realtime) {
-    twitter.setRealtime(!! realtime);
-    io.sockets.emit('realtime', realtime);
-    brainz.queue.length = 0;
-  });
+  socket.on('realtime', function(rt) {
+    if (rt) socket.leave('search');
+    else socket.join('search');
+  })
   socket.on('flush', function() {
-    brainz.queue.length = 0;
+    brainz.queues.forEach(function(q){q.length = 0});
   });
+  socket.join('realtime');
+  socket.join('search');
   history.forEach(function(t,i) {
     setTimeout(function() {
       socket.emit('tweet', t[0], t[1], true);
     }, i*200);
   });
-  socket.emit('realtime', twitter.realtime);
 });
 
 server.listen(process.env.PORT || 8080);
@@ -57,7 +57,7 @@ var parseSong = function(twit, keywords) {
 
 var runBackend = function(keywords) {
   var queries = keywords.map(function(k) {return k.query;});
-  twitter.getTweets(queries, function(err,twit) {
+  var callback = function(err,twit, room) {
     if (err) {
       console.log(twit.red);
       return;
@@ -88,19 +88,20 @@ var runBackend = function(keywords) {
             day: twit.time.format('ddd'),
             month: twit.time.format('MMM')
           };
-          io.sockets.emit('tweet', twit, acoustic);
+          io.to(room).emit('tweet', twit, acoustic);
           history.push([twit, acoustic]);
           if (history.length > 1000) history.shift();
         }
-      });
-     }
-  });
+      }, room);
+    }
+  };
+  twitter.getTweets(queries, function(e,t){callback(e,t,'search');});
+  twitter.getTweetsRealtime(queries, function(e,t){callback(e,t,'realtime');});
 };
 
 // Start backend
 
 brainz.interval = 1.5;
-twitter.realtime = false;
 twitter.count = 100;
 var active_keywords = keywords.filter(function(k) {
   return k.filters.length > 0;

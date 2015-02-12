@@ -4,6 +4,7 @@ jQuery(document).ready(function($) {
 
     var v = new VIZ();
     var preload = true;
+    var realtime = false;
 
     $('#terminal').terminal(function(command) {}, {
         enabled: false,
@@ -29,9 +30,9 @@ jQuery(document).ready(function($) {
             "Hour": twit.date.hour,
             "Weekday": twit.date.day,
             "Month": twit.date.month,
-            "Tempo": acoustics.features.tempo,
-            "Tonality": acoustics.features.key,
-            "Mode": acoustics.features.scale,
+            "Positiveness": acoustics.features.valence,
+            "Energy": acoustics.features.arousal,
+            "Vocal": acoustics.features.vocal,
             "Artist": acoustics.artist,
             "Song": acoustics.title,
             "Avatar": twit.avatar
@@ -39,14 +40,12 @@ jQuery(document).ready(function($) {
         v.addToChart(point);
     });
 
-    socket.on('realtime', updateRealtime);
-
     // JQuery bindings
     $('#realtime-yes').click(function() {
-        socket.emit('realtime', true);
+        updateRealtime(true);
     });
     $('#realtime-no').click(function()  {
-        socket.emit('realtime', false)
+       updateRealtime(false);
     });
     $('#console-yes').click(function()  { updateConsole(true);   });
     $('#console-no').click(function()   { updateConsole(false);  });
@@ -56,6 +55,9 @@ jQuery(document).ready(function($) {
     });
 
     function updateRealtime(rt) {
+        if (rt == realtime) return;
+        realtime = rt;
+        socket.emit('realtime', rt);
         if (rt) {
             $('#realtime-yes').addClass('selected');
             $('#realtime-no').removeClass('selected');

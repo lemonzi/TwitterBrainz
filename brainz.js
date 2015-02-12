@@ -3,11 +3,21 @@ var NB = require('nodebrainz'),
 
 // THIS IS FOR MUSICBRAINZ (already glued to acousticbrainz)
 
-var queue = exports.queue = [];
+var queues = exports.queue = [[]];
+var queueNames = {'default': 0};
 
 var nb = new NB({});
+var currentQueue = 0;
 setInterval(function() {
-  if (queue.length === 0) return;
+  var newQueue = currentQueue;
+  var queue = queues[newQueue];
+  if (queue.length === 0) {
+    while (queue.length === 0) {
+      newQueue = (newQueue + 1) % queues.length;
+      if (newQueue == currentQueue) return;
+      queue = queues[newQueue];
+    }
+  }
   var task = queue.splice(Math.floor(Math.random() * queue.length), 1)[0];
   var query = task.query;
   var mbCallback = task.callback;
@@ -43,11 +53,17 @@ setInterval(function() {
       }
     };
     exports.acousticBrainz(songs[0].id, abCallback);
+    newQueue = (newQueue + 1) % queues.length;
   });
 }, 3000);
 
-exports.query = function(query, mbCallback) {
-  if (queue.length < 100000) queue.push({
+exports.query = function(query, mbCallback, queue) {
+  if (!queue) queue = 'default';
+  if (!queueNames[queue]) {
+    queueNames[queue] = queues.length;
+    queues.push([]);
+  }
+  if (queues[queueNames[queue]].length < 10000) queues[queueNames[queue]].push({
     query:query,
     callback: mbCallback
   });
@@ -58,14 +74,14 @@ exports.query = function(query, mbCallback) {
 
 var acousticBrainzClient = request.newClient('http://acousticbrainz.org/');
 exports.acousticBrainz = function(id, callback) {
-  acousticBrainzClient.get(id+'/low-level', function(err, res, body) {
+  acousticBrainzClient.get(id+'/high-level', function(err, res, body) {
     if (res.statusCode == 404) {
       callback(true, 'No acoustic features found');
     } else {
       callback(false, {
-        key: body.tonal.chords_key,
-        scale: body.tonal.chords_scale,
-        tempo: body.rhythm.bpm
+        valence: body.highlevel.mood_happy.all.happy,
+        arousal: body.highlevel.mood_relaxed.all.not_relaxed,
+        vocal: body.highlevel.voice_instrumental.value
       });
     }
   });

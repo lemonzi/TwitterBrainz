@@ -11,31 +11,15 @@ var T = new Twit(secrets.twitter);
 // No effect after switch to realtime
 exports.interval = 120;
 
-// Start using the Twitter Search API. When it does not
-// return more data, we switch to the Streaming API.
-// This switch can be forced by changing this.
-exports.realtime = false;
-
 // How many tweets we get with each call to
 // the Twitter Search API
 exports.count = 100;
 
-exports.setRealtime = function(rt) {
-  exports.realtime = rt;
-  if (rt && cb) exports.getTweetsRealtime(q, cb);
-};
-
-var q, cb;
 exports.getTweets = function(queries, callback) {
-  q = queries; cb = callback;
   if (typeof queries == 'string') {
     queries = [queries];
   }
   var getTweetsRecursive = function(query, maxId, callback) {
-    if (exports.realtime) {
-      exports.getTweetsRealtime(queries, callback);
-      return;
-    }
     var newId = maxId || Number.MAX_VALUE;
     console.log('Loading more tweets...'.gray);
     T.get('search/tweets', {
@@ -51,13 +35,13 @@ exports.getTweets = function(queries, callback) {
           newId = Math.min(newId, tweet.id);
           processTweet(tweet, callback);
         });
-        if ((maxId === 0 || newId < maxId)) {
-          setTimeout(function() {
-            getTweetsRecursive(query, newId, callback);
-          }, exports.interval * 1000);
-        } else {
-          exports.realtime = true;
+        if (newId >= maxId) {
+          // start over
+          newId = Number.MAX_VALUE;
         }
+        setTimeout(function() {
+          getTweetsRecursive(query, newId, callback);
+        }, exports.interval * 1000);
       }
     });
   };
@@ -69,17 +53,11 @@ exports.getTweets = function(queries, callback) {
 var connected = false;
 exports.getTweetsRealtime = function(query, callback) {
   if (connected) return;
-  console.log('Finished retrieving tweets. Connecting to realtime stream...'.gray);
-  q = query; cb = callback;
+  console.log('Connecting to realtime stream...'.gray);
   connected = true;
   var stream = T.stream('statuses/filter', {track:query.join(",")});
   // When a Tweet is recieved:
   stream.on('tweet', function(tweet) {
-    if (!exports.realtime) {
-      stream.stop();
-      connected = false;
-      exports.getTweets(query, callback);
-    }
     processTweet(tweet, callback);
   });
   stream.on('error', function(data) {

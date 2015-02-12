@@ -4,15 +4,17 @@ function VIZ() {
 
   // VARIABLES
 
-  var xAxis = 'Hour', yAxis = 'Tempo';
-  var xAxisOptions = ["Hour", "Weekday", "Month"];
-  var yAxisOptions = ["Tempo", "Tonality"];
+  var xAxis = 'Positiveness', yAxis = 'Energy';
+  var xAxisOptions = ["Positiveness"];
+  var yAxisOptions = ["Energy"];
   var descriptions = {
     "Hour": "Hour of the day (user-localized or UTC)",
     "Weekday": "Day of the week",
     "Month": "Month of the year",
     "Tempo": "Average tempo, in BPM",
-    "Tonality": "Tonality of the song"
+    "Tonality": "Tonality of the song",
+    "Positiveness": "Feeling of the song: left is negative, right is positive",
+    "Energy": "Energy; go up for partying hard!"
   };
 
   var bounds;
@@ -67,13 +69,13 @@ function VIZ() {
   d3.select('svg g.legend').append('circle').attr({
     'cx': 0, 'cy': 20, 'r': 7, 'fill': pointColour(1)
   });
-  d3.select('svg g.legend').append('text').text('Major key').attr({
+  d3.select('svg g.legend').append('text').text('Vocal').attr({
     'x': 10, 'y': 24
   });
   d3.select('svg g.legend').append('circle').attr({
     'cx': 0, 'cy': 0, 'r': 7, 'fill': pointColour(2)
   });
-  d3.select('svg g.legend').append('text').text('Minor key').attr({
+  d3.select('svg g.legend').append('text').text('Instrumental').attr({
     'x': 10, 'y': 4
   });
 
@@ -116,9 +118,9 @@ function VIZ() {
 
     // Update
     newElements.transition().attr('r', function(d) {
-        return isNaN(xScale(d[xAxis])) || isNaN(yScale(d[yAxis])) ?
-          0 : 5 + Math.exp(-data.length/20+3);
-      });
+      return isNaN(xScale(d[xAxis])) || isNaN(yScale(d[yAxis])) ?
+        0 : 5 + Math.exp(-data.length/20+3);
+    });
 
     // Add new elements
     var circles = newElements.enter().append('circle');
@@ -136,7 +138,7 @@ function VIZ() {
           0 : 5 + Math.exp(-data.length/20+3);
       })
       .attr('fill', function(d) {
-        return d['Mode'] == 'major' ? pointColour(1) : pointColour(2);
+        return d['Vocal'] == 'voice' ? pointColour(1) : pointColour(2);
       })
       .attr({'stroke': 'none', 'stroke-width': 3})
       .style('cursor', 'pointer')
