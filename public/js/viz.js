@@ -32,7 +32,7 @@ function VIZ() {
 
   svg.append('g')
     .classed('chart', true)
-    .attr('transform', 'translate(80, -50)');
+    .attr('transform', 'translate(100, -50)');
 
   // Build menus
   d3.select('#x-axis-menu')
@@ -64,18 +64,18 @@ function VIZ() {
   updateMenus();
 
   svg.append('g').classed('legend',true)
-     .attr('transform', 'translate(20, 10)');
+     .attr('transform', 'translate(50, 10)');
 
   d3.select('svg g.legend').append('circle').attr({
     'cx': 0, 'cy': 20, 'r': 7, 'fill': pointColour(1)
   });
-  d3.select('svg g.legend').append('text').text('Vocal').attr({
+  d3.select('svg g.legend').append('text').text('Major').attr({
     'x': 10, 'y': 24
   });
   d3.select('svg g.legend').append('circle').attr({
     'cx': 0, 'cy': 0, 'r': 7, 'fill': pointColour(2)
   });
-  d3.select('svg g.legend').append('text').text('Instrumental').attr({
+  d3.select('svg g.legend').append('text').text('Minor').attr({
     'x': 10, 'y': 4
   });
 
@@ -138,7 +138,7 @@ function VIZ() {
           0 : 5 + Math.exp(-data.length/20+3);
       })
       .attr('fill', function(d) {
-        return d['Vocal'] == 'voice' ? pointColour(1) : pointColour(2);
+        return d['Mode'] == 'major' ? pointColour(1) : pointColour(2);
       })
       .attr({'stroke': 'none', 'stroke-width': 3})
       .style('cursor', 'pointer')
@@ -192,7 +192,7 @@ function VIZ() {
                      'artist='+encodeURIComponent(d.Artist)+
                      '&title='+encodeURIComponent(d.Song)+
                      '&autoplay=true'+
-                     '&disabledResolvers=Soundcloud')
+                     '&disabled=Soundcloud')
     })
 
     // Exit removed elements
