@@ -32,7 +32,7 @@ function VIZ() {
 
   svg.append('g')
     .classed('chart', true)
-    .attr('transform', 'translate(100, -50)');
+    .attr('transform', 'translate(100,-10)');
 
   // Build menus
   d3.select('#x-axis-menu')
@@ -64,7 +64,7 @@ function VIZ() {
   updateMenus();
 
   svg.append('g').classed('legend',true)
-     .attr('transform', 'translate(50, 10)');
+     .attr('transform', 'translate(50, 20)');
 
   d3.select('svg g.legend').append('circle').attr({
     'cx': 0, 'cy': 20, 'r': 7, 'fill': pointColour(1)
