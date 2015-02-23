@@ -32,7 +32,7 @@ function VIZ() {
 
   svg.append('g')
     .classed('chart', true)
-    .attr('transform', 'translate(100,-10)');
+    .attr('transform', 'translate(100,-50)');
 
   // Build menus
   d3.select('#x-axis-menu')
@@ -64,19 +64,20 @@ function VIZ() {
   updateMenus();
 
   svg.append('g').classed('legend',true)
-     .attr('transform', 'translate(50, 20)');
+     .attr('transform', 'translate(50, 10)');
 
   d3.select('svg g.legend').append('circle').attr({
-    'cx': 0, 'cy': 20, 'r': 7, 'fill': pointColour(1)
+    'cx': 0, 'cy': 0, 'r': 7, 'fill': pointColour(1)
   });
   d3.select('svg g.legend').append('text').text('Major').attr({
-    'x': 10, 'y': 24
+    'x': 10, 'y': 4
   });
+
   d3.select('svg g.legend').append('circle').attr({
-    'cx': 0, 'cy': 0, 'r': 7, 'fill': pointColour(2)
+    'cx': 0, 'cy': 20, 'r': 7, 'fill': pointColour(2)
   });
   d3.select('svg g.legend').append('text').text('Minor').attr({
-    'x': 10, 'y': 4
+    'x': 10, 'y': 24
   });
 
   d3.select('svg g.chart').append('text')
